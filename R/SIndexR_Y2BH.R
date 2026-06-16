@@ -28,6 +28,7 @@
 #'    SI_ERR_LT13     if site index <= 1.3
 #' @importFrom data.table data.table
 #' @rdname SIndexR_Y2BH
+#' @export
 SIndexR_Y2BH <- function(curve,
                          siteIndex){
   curve <- wholeToInteger(curve, "curve")

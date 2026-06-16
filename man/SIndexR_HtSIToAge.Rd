@@ -13,8 +13,8 @@ The particular site index curve to project the height and age along.}
 \item{height}{Numeric, Defines a tree height of the species in meters.}
 
 \item{ageType}{Integer/Numeric, Defines age type. Must be one of:
-\code{SI_AT_TOTAL}, the age is the total age of the stand in years since
-planting; or \code{SI_AT_BREAST}, the age indicates the number of years since the stand
+\code{0}, the age is the total age of the stand in years since
+planting; or \code{1}, the age indicates the number of years since the stand
 reached breast height.}
 
 \item{siteIndex}{Numeric, Defines site index of the stand.}

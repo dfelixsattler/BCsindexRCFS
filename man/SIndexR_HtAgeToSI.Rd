@@ -14,8 +14,8 @@ The particular site index curve to project the height and age along.}
 interpretation of this age is modified by the 'ageType' parameter.}
 
 \item{ageType}{Integer/Numeric, Defines age type. Must be one of:
-\code{SI_AT_TOTAL}, the age is the total age of the stand in years since
-planting; \code{SI_AT_BREAST}, the age indicates the number of years since the stand
+\code{0}, the age is the total age of the stand in years since
+planting; \code{1}, the age indicates the number of years since the stand
 reached breast height.}
 
 \item{height}{numeric, The height of the species in metres.}

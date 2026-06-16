@@ -109,3 +109,35 @@ species_remap <- function(sc, fiz) {
     .Call(`_SIndexR_species_remap`, sc, fiz)
 }
 
+sindex_ext_set_dll <- function(dll_path) {
+    .Call(`_SIndexR_sindex_ext_set_dll`, dll_path)
+}
+
+sindex_ext_clear_dll <- function() {
+    invisible(.Call(`_SIndexR_sindex_ext_clear_dll`))
+}
+
+sindex_ext_is_loaded <- function() {
+    .Call(`_SIndexR_sindex_ext_is_loaded`)
+}
+
+sindex_ext_dll_path <- function() {
+    .Call(`_SIndexR_sindex_ext_dll_path`)
+}
+
+sindex_ext_ht2si <- function(curve_index, age, age_type, height, est_type) {
+    .Call(`_SIndexR_sindex_ext_ht2si`, curve_index, age, age_type, height, est_type)
+}
+
+sindex_ext_si2ht <- function(curve_index, age, age_type, site_index, y2bh) {
+    .Call(`_SIndexR_sindex_ext_si2ht`, curve_index, age, age_type, site_index, y2bh)
+}
+
+sindex_ext_y2bh <- function(curve_index, site_index) {
+    .Call(`_SIndexR_sindex_ext_y2bh`, curve_index, site_index)
+}
+
+sindex_ext_sc2si <- function(species_index, site_class, fiz) {
+    .Call(`_SIndexR_sindex_ext_sc2si`, species_index, site_class, fiz)
+}
+

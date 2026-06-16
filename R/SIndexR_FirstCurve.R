@@ -25,6 +25,7 @@
 #'    SI_ERR_NO_ANS   there are no curves defined for this species
 #' @note
 #' No assumption should be made about the ordering of the curves.
+#' @export
 #' @rdname SIndexR_FirstCurve
 SIndexR_FirstCurve <- function(sp_index){
   sp_index <- wholeToInteger(sp_index, "sp_index")

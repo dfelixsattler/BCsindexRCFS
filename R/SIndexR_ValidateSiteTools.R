@@ -1,0 +1,189 @@
+## SiteTools validation helper
+
+sindex_parse_sitetools_csv <- function(filepath) {
+  lines <- readLines(filepath)
+
+  bh_age_idx <- grep("BH Age", lines)
+  if (length(bh_age_idx) != 1) {
+    stop("Could not find the SiteTools table header in: ", filepath)
+  }
+
+  si_header_idx <- bh_age_idx + 1
+
+  metadata <- list()
+  for (i in seq_len(bh_age_idx - 1L)) {
+    line <- lines[[i]]
+    if (grepl(",", line, fixed = TRUE)) {
+      parts <- strsplit(line, ",", fixed = TRUE)[[1]]
+      if (length(parts) >= 2L) {
+        key <- trimws(parts[[1]])
+        value <- trimws(parts[[2]])
+        if (nzchar(key) && nzchar(value)) {
+          metadata[[key]] <- value
+        }
+      }
+    }
+  }
+
+  si_parts <- strsplit(lines[[si_header_idx]], ",", fixed = TRUE)[[1]]
+  si_values <- suppressWarnings(as.numeric(trimws(si_parts[-1L])))
+  si_values <- si_values[!is.na(si_values)]
+
+  table_lines <- lines[si_header_idx:length(lines)]
+  tmpfile <- tempfile(fileext = ".csv")
+  writeLines(table_lines, tmpfile)
+  on.exit(unlink(tmpfile), add = TRUE)
+
+  data <- read.csv(tmpfile, stringsAsFactors = FALSE, row.names = NULL)
+  data <- data[!apply(is.na(data), 1L, all), , drop = FALSE]
+
+  if ("X" %in% names(data)) {
+    data <- data[data$X != "Y2BH", , drop = FALSE]
+  }
+
+  list(metadata = metadata, si_values = si_values, data = data)
+}
+
+sindex_validate_sitetools_table <- function(sitetools_data, species_code, species_name) {
+  metadata <- sitetools_data$metadata
+  si_values <- sitetools_data$si_values
+  data <- sitetools_data$data
+
+  first_col_name <- names(data)[1L]
+  ages <- as.numeric(data[[first_col_name]])
+
+  results <- list()
+  for (si_idx in seq_along(si_values)) {
+    si <- si_values[[si_idx]]
+    col_idx <- si_idx + 1L
+
+    sitetools_heights <- as.numeric(data[[col_idx]])
+    r_heights <- sapply(ages, function(age) {
+      tryCatch(
+        SI2HT(iage = age, age_type = 1, site_index = si, species = species_code),
+        error = function(e) NA_real_
+      )
+    })
+
+    diff <- sitetools_heights - r_heights
+    pct_diff <- ifelse(sitetools_heights != 0, (diff / sitetools_heights) * 100, NA_real_)
+
+    results[[si_idx]] <- data.frame(
+      species = species_name,
+      SI = si,
+      Age = ages,
+      SiteTools = sitetools_heights,
+      R_Wrapper = r_heights,
+      Difference = diff,
+      Pct_Diff = pct_diff,
+      stringsAsFactors = FALSE
+    )
+  }
+
+  all_results <- do.call(rbind, results)
+  rownames(all_results) <- NULL
+
+  summary_stats <- aggregate(
+    all_results[, c("Difference", "Pct_Diff")],
+    by = list(SI = all_results$SI),
+    FUN = function(x) c(
+      Min = min(x, na.rm = TRUE),
+      Max = max(x, na.rm = TRUE),
+      Mean = mean(x, na.rm = TRUE),
+      SD = sd(x, na.rm = TRUE)
+    )
+  )
+
+  list(metadata = metadata, comparison = all_results, summary = summary_stats)
+}
+
+#' Validate SiteTools CSV exports against SIndexR
+#'
+#' Reads SiteTools 4.4 CSV exports, compares the height table against the
+#' corresponding SIndexR wrapper, and optionally writes comparison CSV files.
+#'
+#' Set `use_external_dll = TRUE` to route supported wrappers through the
+#' runtime DLL backend configured via `SIndexR_SetExternalDll()`.
+#'
+#' @param fd_csv path to the Douglas-fir SiteTools CSV export
+#' @param cw_csv path to the western redcedar SiteTools CSV export
+#' @param output_dir directory where comparison CSV files are written
+#' @param use_external_dll logical; if TRUE, enable runtime external DLL mode for the run
+#' @param external_dll_path optional DLL path to load before validating
+#' @param save_results logical; write comparison CSVs to `output_dir`
+#' @param verbose logical; print summaries to the console
+#' @return a list with `fd`, `cw`, and `files` entries
+#' @examples
+#' \dontrun{
+#' ValidateSiteTools(
+#'   fd_csv = "C:/SIndexR/my_tests/SiteToolsExport_Fd.csv",
+#'   cw_csv = "C:/SIndexR/my_tests/SiteToolsExport_Cw.csv",
+#'   output_dir = "C:/SIndexR/my_tests",
+#'   use_external_dll = TRUE,
+#'   external_dll_path = "C:/sindex64.dll"
+#' )
+#' }
+#' @export
+ValidateSiteTools <- function(fd_csv,
+                                      cw_csv,
+                                      output_dir = dirname(fd_csv),
+                                      use_external_dll = FALSE,
+                                      external_dll_path = NULL,
+                                      save_results = TRUE,
+                                      verbose = TRUE) {
+  if (!file.exists(fd_csv)) {
+    stop("FD CSV does not exist: ", fd_csv)
+  }
+  if (!file.exists(cw_csv)) {
+    stop("CW CSV does not exist: ", cw_csv)
+  }
+
+  dll_loaded <- FALSE
+  if (isTRUE(use_external_dll)) {
+    if (is.null(external_dll_path)) {
+      external_dll_path <- Sys.getenv("SINDEX_EXTERNAL_DLL", unset = "C:/sindex64.dll")
+    }
+    if (!nzchar(external_dll_path)) {
+      stop("use_external_dll is TRUE but no external_dll_path was supplied.")
+    }
+    dll_loaded <- isTRUE(SIndexR_SetExternalDll(external_dll_path))
+  }
+
+  on.exit({
+    if (dll_loaded) {
+      SIndexR_ClearExternalDll()
+    }
+  }, add = TRUE)
+
+  fd_data <- sindex_parse_sitetools_csv(fd_csv)
+  cw_data <- sindex_parse_sitetools_csv(cw_csv)
+
+  fd_result <- sindex_validate_sitetools_table(fd_data, "FDC", "Douglas-fir")
+  cw_result <- sindex_validate_sitetools_table(cw_data, "CWC", "Western redcedar")
+
+  if (save_results) {
+    if (!dir.exists(output_dir)) {
+      dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+    }
+    fd_file <- file.path(output_dir, "Validation_FD_Comparison.csv")
+    cw_file <- file.path(output_dir, "Validation_CW_Comparison.csv")
+    write.csv(fd_result$comparison, fd_file, row.names = FALSE)
+    write.csv(cw_result$comparison, cw_file, row.names = FALSE)
+  } else {
+    fd_file <- NA_character_
+    cw_file <- NA_character_
+  }
+
+  if (verbose) {
+    cat("FD summary:\n")
+    print(fd_result$summary)
+    cat("\nCW summary:\n")
+    print(cw_result$summary)
+  }
+
+  list(
+    fd = fd_result,
+    cw = cw_result,
+    files = list(fd = fd_file, cw = cw_file)
+  )
+}

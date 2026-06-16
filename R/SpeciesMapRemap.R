@@ -25,10 +25,57 @@
 #' @note
 #'    Species code string can be 1, 2, or 3 letters; upper/lower case
 #'      is ignored.
+#' @export
 #' @rdname SIndexR_SpecMap
 SIndexR_SpecMap <- function(sc)
 {
   return(unlist(lapply(sc, function(s) species_map (s))))
+}
+
+#' @title
+#'    Resolve species index from species code or numeric index
+#' @description
+#'    Convert a species code string or numeric species index into an integer species index.
+#' @param species Integer or character species index or code.
+#' @param fiz Character, optional Forest inventory zone code used to disambiguate species codes.
+#' @return Integer species index.
+#'    May return an error code under the following conditions:
+#'    SI_ERR_CODE     if species code is unknown
+#'    SI_ERR_FIZ      if FIZ code is unknown
+#' @note
+#'    Species code string can be 1, 2, or 3 letters; upper/lower case is ignored.
+#' @export
+#' @rdname SIndexR_SpecMap
+SIndexR_SpeciesIndex <- function(species, fiz = NULL)
+{
+  if (is.factor(species)) {
+    species <- as.character(species)
+  }
+
+  if (is.character(species)) {
+    if (is.null(fiz)) {
+      return(unlist(lapply(species, function(s) species_map(s))))
+    }
+
+    if (length(species) == 1 & length(fiz) != 1) {
+      fiz <- rep(fiz, length(species))
+    }
+    if (length(species) != length(fiz)) {
+      stop("species and fiz do not have same length.")
+    }
+
+    species_list <- lapply(species, function(s) s)
+    fiz_list <- lapply(fiz, function(s) s)
+    allinputs <- Map(list, species_list, fiz_list)
+    return(unlist(lapply(allinputs, function(s) species_remap(sc = s[[1]],
+                                                               fiz = s[[2]]))))
+  }
+
+  if (is.numeric(species) || is.integer(species)) {
+    return(wholeToInteger(species, "species"))
+  }
+
+  stop("species must be an integer index or a species code character string.")
 }
 
 
@@ -52,6 +99,7 @@ SIndexR_SpecMap <- function(sc)
 #'    Species code string can be 1, 2, or 3 letters; upper/lower case
 #'      is ignored.  FIZ is only used where needed, such as for species
 #'      code "FD".
+#' @export
 #' @rdname   SIndexR_SpecRemap
 SIndexR_SpecRemap <- function(sc, fiz)
 {

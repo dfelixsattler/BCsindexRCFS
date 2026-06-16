@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // age_to_age
 double age_to_age(short int cu_index, double age1, short int age1_type, short int age2_type, double y2bh);
 RcppExport SEXP _SIndexR_age_to_age(SEXP cu_indexSEXP, SEXP age1SEXP, SEXP age1_typeSEXP, SEXP age2_typeSEXP, SEXP y2bhSEXP) {
@@ -326,6 +331,101 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sindex_ext_set_dll
+bool sindex_ext_set_dll(std::string dll_path);
+RcppExport SEXP _SIndexR_sindex_ext_set_dll(SEXP dll_pathSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type dll_path(dll_pathSEXP);
+    rcpp_result_gen = Rcpp::wrap(sindex_ext_set_dll(dll_path));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sindex_ext_clear_dll
+void sindex_ext_clear_dll();
+RcppExport SEXP _SIndexR_sindex_ext_clear_dll() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    sindex_ext_clear_dll();
+    return R_NilValue;
+END_RCPP
+}
+// sindex_ext_is_loaded
+bool sindex_ext_is_loaded();
+RcppExport SEXP _SIndexR_sindex_ext_is_loaded() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(sindex_ext_is_loaded());
+    return rcpp_result_gen;
+END_RCPP
+}
+// sindex_ext_dll_path
+std::string sindex_ext_dll_path();
+RcppExport SEXP _SIndexR_sindex_ext_dll_path() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(sindex_ext_dll_path());
+    return rcpp_result_gen;
+END_RCPP
+}
+// sindex_ext_ht2si
+double sindex_ext_ht2si(int curve_index, double age, int age_type, double height, int est_type);
+RcppExport SEXP _SIndexR_sindex_ext_ht2si(SEXP curve_indexSEXP, SEXP ageSEXP, SEXP age_typeSEXP, SEXP heightSEXP, SEXP est_typeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type curve_index(curve_indexSEXP);
+    Rcpp::traits::input_parameter< double >::type age(ageSEXP);
+    Rcpp::traits::input_parameter< int >::type age_type(age_typeSEXP);
+    Rcpp::traits::input_parameter< double >::type height(heightSEXP);
+    Rcpp::traits::input_parameter< int >::type est_type(est_typeSEXP);
+    rcpp_result_gen = Rcpp::wrap(sindex_ext_ht2si(curve_index, age, age_type, height, est_type));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sindex_ext_si2ht
+double sindex_ext_si2ht(int curve_index, double age, int age_type, double site_index, double y2bh);
+RcppExport SEXP _SIndexR_sindex_ext_si2ht(SEXP curve_indexSEXP, SEXP ageSEXP, SEXP age_typeSEXP, SEXP site_indexSEXP, SEXP y2bhSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type curve_index(curve_indexSEXP);
+    Rcpp::traits::input_parameter< double >::type age(ageSEXP);
+    Rcpp::traits::input_parameter< int >::type age_type(age_typeSEXP);
+    Rcpp::traits::input_parameter< double >::type site_index(site_indexSEXP);
+    Rcpp::traits::input_parameter< double >::type y2bh(y2bhSEXP);
+    rcpp_result_gen = Rcpp::wrap(sindex_ext_si2ht(curve_index, age, age_type, site_index, y2bh));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sindex_ext_y2bh
+double sindex_ext_y2bh(int curve_index, double site_index);
+RcppExport SEXP _SIndexR_sindex_ext_y2bh(SEXP curve_indexSEXP, SEXP site_indexSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type curve_index(curve_indexSEXP);
+    Rcpp::traits::input_parameter< double >::type site_index(site_indexSEXP);
+    rcpp_result_gen = Rcpp::wrap(sindex_ext_y2bh(curve_index, site_index));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sindex_ext_sc2si
+double sindex_ext_sc2si(int species_index, std::string site_class, std::string fiz);
+RcppExport SEXP _SIndexR_sindex_ext_sc2si(SEXP species_indexSEXP, SEXP site_classSEXP, SEXP fizSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type species_index(species_indexSEXP);
+    Rcpp::traits::input_parameter< std::string >::type site_class(site_classSEXP);
+    Rcpp::traits::input_parameter< std::string >::type fiz(fizSEXP);
+    rcpp_result_gen = Rcpp::wrap(sindex_ext_sc2si(species_index, site_class, fiz));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_SIndexR_age_to_age", (DL_FUNC) &_SIndexR_age_to_age, 5},
@@ -355,6 +455,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SIndexR_si_y2bh05", (DL_FUNC) &_SIndexR_si_y2bh05, 2},
     {"_SIndexR_species_map", (DL_FUNC) &_SIndexR_species_map, 1},
     {"_SIndexR_species_remap", (DL_FUNC) &_SIndexR_species_remap, 2},
+    {"_SIndexR_sindex_ext_set_dll", (DL_FUNC) &_SIndexR_sindex_ext_set_dll, 1},
+    {"_SIndexR_sindex_ext_clear_dll", (DL_FUNC) &_SIndexR_sindex_ext_clear_dll, 0},
+    {"_SIndexR_sindex_ext_is_loaded", (DL_FUNC) &_SIndexR_sindex_ext_is_loaded, 0},
+    {"_SIndexR_sindex_ext_dll_path", (DL_FUNC) &_SIndexR_sindex_ext_dll_path, 0},
+    {"_SIndexR_sindex_ext_ht2si", (DL_FUNC) &_SIndexR_sindex_ext_ht2si, 5},
+    {"_SIndexR_sindex_ext_si2ht", (DL_FUNC) &_SIndexR_sindex_ext_si2ht, 5},
+    {"_SIndexR_sindex_ext_y2bh", (DL_FUNC) &_SIndexR_sindex_ext_y2bh, 2},
+    {"_SIndexR_sindex_ext_sc2si", (DL_FUNC) &_SIndexR_sindex_ext_sc2si, 3},
     {NULL, NULL, 0}
 };
 

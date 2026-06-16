@@ -31,10 +31,11 @@
 #'    SI_ERR_NO_ANS   input parameter is last defined index for this species.
 #' @note
 #'    No assumption should be made about the ordering of the curves.
+#' @export
 #' @rdname SIndexR_NextCurve
 
 SIndexR_NextCurve <- function(sp_index, cu_index){
-  sp_index <- wholeToInteger(sp_index, "sp_index")
+  sp_index <- SIndexR_SpeciesIndex(sp_index)
   cu_index <- wholeToInteger(cu_index, "cu_index")
   if(length(sp_index) == 1 & length(cu_index) != 1){
     sp_index <- rep(sp_index, length(cu_index))
