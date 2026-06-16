@@ -26,5 +26,5 @@ Floating point target species site index. (computed)
    SI_ERR_NO_ANS   there is no conversion defined.
 }
 \description{
-Site index conversion between species. This function needs to be revised.
+Site index conversion between species when a source-target mapping is defined.
 }

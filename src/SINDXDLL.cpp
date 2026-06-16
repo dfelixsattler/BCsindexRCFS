@@ -2473,16 +2473,15 @@ double Sindex_SITOSI (
     short int sp_index2)
 {
   short int i;
-  double site2;
 
   if (sp_index1 < 0 || sp_index1 >= SI_MAX_SPECIES)
   {
-    site2 = SI_ERR_SPEC;
+    return SI_ERR_SPEC;
   }
 
   if (sp_index2 < 0 || sp_index2 >= SI_MAX_SPECIES)
   {
-    site2 = SI_ERR_SPEC;
+    return SI_ERR_SPEC;
   }
 
   for (i = 0; i < SI_MAX_CONVERT; i++)
@@ -2490,12 +2489,11 @@ double Sindex_SITOSI (
     if (si_convert[i][0] == sp_index1)
       if (si_convert[i][1] == sp_index2)
       {
-        site2 = si_convert[i][2] + si_convert[i][3] * site;
+        return si_convert[i][2] + si_convert[i][3] * site;
       }
   }
 
-  site2 = SI_ERR_NO_ANS;
-  return site2;
+  return SI_ERR_NO_ANS;
 }
 
 

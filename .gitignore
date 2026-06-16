@@ -34,3 +34,8 @@ vignettes/*.pdf
 *.knit.md
 # practice folder
 developmentTools\.R
+
+# Local compile artifacts
+src/*.o
+src/*.obj
+src/*.dll.backup
