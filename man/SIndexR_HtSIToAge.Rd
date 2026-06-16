@@ -41,4 +41,7 @@ reached breast height.}
 \description{
 Converts a Height and Site Index to an Age for a particular Site Index
 Curve.
+
+Legacy interface retained for compatibility.
+Prefer \code{SI2AGE()} for new code.
 }

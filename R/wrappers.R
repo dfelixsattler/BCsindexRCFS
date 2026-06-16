@@ -240,6 +240,30 @@ SIY2BH <- function(cu_index = NULL, site_index, species = NULL, curve = "default
 #' @export
 Y2BH <- function(...) SIY2BH(...)
 
+#' Years to breast height rounded to 0.5
+#'
+#' Compute years to breast height rounded to 0.5-year steps
+#' (0.5, 1.5, 2.5, ...).
+#'
+#' @param cu_index numeric or integer, explicit curve index
+#' @param site_index numeric, site index value
+#' @param species integer/numeric species index or species code (e.g. "SW", "FDI")
+#' @param curve curve selector when species is provided: "default", "first", numeric curve index, or curve name
+#' @param fiz optional FIZ code used when remapping species codes
+#' @return numeric years to breast height rounded to 0.5-year steps
+#' @examples
+#' SIY2BH05(1, 30)
+#' SIY2BH05(site_index = 30, species = "SW")
+#' @export
+SIY2BH05 <- function(cu_index = NULL, site_index, species = NULL, curve = "default", fiz = NULL) {
+  cu_index <- resolve_curve_index(cu_index = cu_index, species = species, curve = curve, fiz = fiz)
+  si_y2bh05(as.integer(cu_index), as.numeric(site_index))
+}
+
+#' @rdname SIY2BH05
+#' @export
+Y2BH05 <- function(...) SIY2BH05(...)
+
 #' Convert age between type-at-breast and type-at-total
 #'
 #' Converts age from one age type (breast height or total) to another.

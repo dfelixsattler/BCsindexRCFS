@@ -26,4 +26,7 @@ SIndexR_SCToSI(sp_index, sitecl, fiz)
 }
 \description{
 Get site index based on site class.
+
+   Legacy interface retained for compatibility.
+   Prefer \code{SC2SI()} for new code.
 }

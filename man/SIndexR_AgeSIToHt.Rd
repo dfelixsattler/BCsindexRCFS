@@ -38,4 +38,7 @@ The number of years it takes the stand to reach breast height.}
 \description{
 Converts an Age and Site Index to a Height for a particular Site Index
    Curve.
+
+   Legacy interface retained for compatibility.
+   Prefer \code{SI2HT()} for new code.
 }

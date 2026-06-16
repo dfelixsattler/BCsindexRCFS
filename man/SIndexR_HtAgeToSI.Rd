@@ -49,4 +49,7 @@ v             \code{SI_EST_DIRECT}, compute the site index based on direct equat
 \description{
 Converts a Height and Age to a Site Index for a particular Site Index
              Curve.
+
+             Legacy interface retained for compatibility.
+             Prefer \code{HT2SI()} for new code.
 }

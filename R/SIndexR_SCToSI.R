@@ -14,6 +14,9 @@
 #'    Get site index based on site class.
 #' @description
 #'    Get site index based on site class.
+#'
+#'    Legacy interface retained for compatibility.
+#'    Prefer \code{SC2SI()} for new code.
 #' @param sp_index Integer/Numeric, Species index.
 #' @param sitecl character, Site class, must be one of \code{G}, \code{M}, \code{P} and \code{L}.
 #' @param fiz character, Forest inventory zone: (A,B,C)=coast, (D,E,F,G,H,I,J,K,L)=interior.

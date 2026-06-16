@@ -15,6 +15,9 @@
 #' @description
 #'    Converts an Age and Site Index to a Height for a particular Site Index
 #'    Curve.
+#'
+#'    Legacy interface retained for compatibility.
+#'    Prefer \code{SI2HT()} for new code.
 #' @param curve Integer/Numeric, The particular site index curve to project the height and age along.
 #' @param age Numeric, The age of the trees indicated by the curve selection.  The
 #'                     interpretation of this age is modified by the 'ageType' parameter.

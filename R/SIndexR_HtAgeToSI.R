@@ -14,6 +14,9 @@
 #' Calculates site index based on height, age and site index curve.
 #' @description Converts a Height and Age to a Site Index for a particular Site Index
 #'              Curve.
+#'
+#'              Legacy interface retained for compatibility.
+#'              Prefer \code{HT2SI()} for new code.
 #' @param curve Integer/Numeric, Specifies site index curve.
 #'                       The particular site index curve to project the height and age along.
 #' @param age numeric, Tree age.The age of the trees indicated by the curve selection.  The

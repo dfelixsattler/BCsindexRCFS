@@ -18,6 +18,17 @@ test_that("SIY2BH computes breast height age correctly", {
   expect_equal(SIY2BH(1, 30), 2)
 })
 
+test_that("SIY2BH05 computes 0.5-step breast height age", {
+  v <- SIY2BH05(1, 30)
+  expect_true(is.numeric(v))
+  expect_true(v > 0)
+  expect_equal((v * 2) %% 1, 0)
+})
+
+test_that("Y2BH05 alias matches SIY2BH05", {
+  expect_equal(Y2BH05(1, 30), SIY2BH05(1, 30))
+})
+
 test_that("wrappers accept species codes with default curve selection", {
   expect_equal(HT2SI(age = 50, age_type = 1, height = 30, species = "SW"), 30)
   expect_equal(SI2HT(iage = 50, age_type = 1, site_index = 30, species = "SW"), 30)
