@@ -57,6 +57,7 @@ SIndexR_HtAgeToSI <- function(curve,
                              ageType,
                              height,
                              estType){
+    sindex_warn_legacy_once("SIndexR_HtAgeToSI", "HT2SI")
   curve <- wholeToInteger(curve, "curve")
   ageType <- wholeToInteger(ageType, "ageType")
   estType <- wholeToInteger(estType, "estType")

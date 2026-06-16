@@ -51,6 +51,7 @@ SIndexR_HtSIToAge <- function(curve,
                               ageType,
                               siteIndex,
                               y2bh){
+    sindex_warn_legacy_once("SIndexR_HtSIToAge", "SI2AGE")
   curve <- wholeToInteger(curve, "curve")
   ageType <- wholeToInteger(ageType, "ageType")
   inputdata <- data.table::data.table(curve, height, ageType, siteIndex, y2bh)

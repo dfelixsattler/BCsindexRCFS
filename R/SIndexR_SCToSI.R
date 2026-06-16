@@ -34,6 +34,7 @@
 SIndexR_SCToSI <- function(sp_index,
                            sitecl,
                            fiz){
+    sindex_warn_legacy_once("SIndexR_SCToSI", "SC2SI")
   sp_index <- wholeToInteger(sp_index, "sp_index")
   inputdata <- data.table::data.table(sp_index, sitecl, fiz)
   rm(sp_index, sitecl, fiz)

@@ -32,6 +32,8 @@
 SIndexR_Y2BH05 <- function(curve,
                            siteIndex){
 
+    sindex_warn_legacy_once("SIndexR_Y2BH05", "SIY2BH05")
+
   curve <- wholeToInteger(curve, "curve")
   inputdata <- data.table::data.table(curve, siteIndex)
   rm(curve, siteIndex)
