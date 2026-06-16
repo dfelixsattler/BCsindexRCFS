@@ -1,6 +1,8 @@
 #' @useDynLib SIndexR, .registration=TRUE
 #' @importFrom Rcpp evalCpp
 #' @keywords internal
+#' @seealso See `vignette("legacy-interfaces")` for a complete reference of legacy
+#'   function mappings and migration guidance.
 "_PACKAGE"
 
 # Track one-time legacy interface warnings for the current R session.

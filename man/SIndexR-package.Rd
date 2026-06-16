@@ -8,4 +8,8 @@
 \description{
 This package contains key functions in SiteTools.
 }
+\seealso{
+See `vignette("legacy-interfaces")` for a complete reference of legacy
+  function mappings and migration guidance.
+}
 \keyword{internal}

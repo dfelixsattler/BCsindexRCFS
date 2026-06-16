@@ -1,0 +1,150 @@
+---
+title: "Legacy Interfaces Reference"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Legacy Interfaces Reference}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Overview
+
+SIndexR provides modern, harmonized wrapper functions that offer cleaner APIs and better integration with the package ecosystem. Some legacy functions are retained for backward compatibility but are no longer the recommended approach for new code.
+
+This document lists all legacy interfaces and their modern equivalents.
+
+## Legacy Conversion Wrappers
+
+These legacy functions perform core site index conversions but return results in a `list(output=..., error=...)` format and require numeric curve indices. Modern wrappers accept species codes, have cleaner return values, and integrate with external DLL backends.
+
+### Height to Site Index
+
+| Legacy Function | Modern Function | Key Improvements |
+|-----------------|-----------------|------------------|
+| `SIndexR_HtAgeToSI(curve, age, ageType, height, estType)` | `HT2SI(cu_index = NULL, age, age_type = 1, height, si_est_type = 0, species = NULL, curve = "default", fiz = NULL)` | Accepts species codes, simpler return value, external DLL support |
+
+**Example:**
+```r
+# Old way (legacy)
+result <- SIndexR_HtAgeToSI(1, 50, 1, 30, 0)
+si <- result$output
+
+# New way (modern)
+si <- HT2SI(1, 50, 1, 30, 0)
+# Or with species code:
+si <- HT2SI(age = 50, height = 30, species = "SW")
+```
+
+### Age to Height (Site Index)
+
+| Legacy Function | Modern Function | Key Improvements |
+|-----------------|-----------------|------------------|
+| `SIndexR_AgeSIToHt(curve, age, ageType, siteIndex, y2bh)` | `SI2HT(cu_index = NULL, iage, age_type = 1, site_index, y2bh = NA_real_, pi = 0.5, species = NULL, curve = "default", fiz = NULL)` | Accepts species codes, simpler return value, external DLL support |
+
+**Example:**
+```r
+# Old way (legacy)
+result <- SIndexR_AgeSIToHt(1, 50, 1, 30, 2)
+height <- result$output
+
+# New way (modern)
+height <- SI2HT(1, 50, 1, 30, 2)
+# Or with species code:
+height <- SI2HT(iage = 50, site_index = 30, species = "SW")
+```
+
+### Height to Age (Site Index)
+
+| Legacy Function | Modern Function | Key Improvements |
+|-----------------|-----------------|------------------|
+| `SIndexR_HtSIToAge(curve, height, ageType, siteIndex, y2bh)` | `SI2AGE(cu_index = NULL, site_height, age_type = 1, site_index, y2bh = NA_real_, species = NULL, curve = "default", fiz = NULL)` | Accepts species codes, simpler return value, external DLL support |
+
+**Example:**
+```r
+# Old way (legacy)
+result <- SIndexR_HtSIToAge(1, 30, 1, 30, 2)
+age <- result$output
+
+# New way (modern)
+age <- SI2AGE(1, 30, 1, 30, 2)
+# Or with species code:
+age <- SI2AGE(site_height = 30, site_index = 30, species = "SW")
+```
+
+### Site Class to Site Index
+
+| Legacy Function | Modern Function | Key Improvements |
+|-----------------|-----------------|------------------|
+| `SIndexR_SCToSI(sp_index, sitecl, fiz)` | `SC2SI(species, site_class, fiz = NULL)` | Accepts species codes, simpler return value, cleaner validation |
+
+**Example:**
+```r
+# Old way (legacy)
+result <- SIndexR_SCToSI(11, "M", "H")
+si <- result$output
+
+# New way (modern)
+si <- SC2SI(11, "M", "H")
+# Or with species code:
+si <- SC2SI("FDI", "M")
+```
+
+### Years to Breast Height (0.5-year steps)
+
+| Legacy Function | Modern Function | Key Improvements |
+|-----------------|-----------------|------------------|
+| `SIndexR_Y2BH05(curve, siteIndex)` | `SIY2BH05(cu_index = NULL, site_index, species = NULL, curve = "default", fiz = NULL)` | Accepts species codes, simpler return value, external DLL support |
+
+**Example:**
+```r
+# Old way (legacy)
+result <- SIndexR_Y2BH05(1, 30)
+y2bh <- result$output
+
+# New way (modern)
+y2bh <- SIY2BH05(1, 30)
+# Or with species code:
+y2bh <- SIY2BH05(site_index = 30, species = "SW")
+```
+
+## Return Value Changes
+
+Legacy functions return `list(output = ..., error = ...)` while modern wrappers return the numeric result directly.
+
+```r
+# Legacy pattern
+result <- SIndexR_HtAgeToSI(1, 50, 1, 30, 0)
+if (result$error == 0) {
+  si <- result$output
+} else {
+  cat("Error code:", result$error)
+}
+
+# Modern pattern
+si <- HT2SI(1, 50, 1, 30, 0)
+if (is.numeric(si) && si > 0) {
+  # Use si directly
+}
+```
+
+## Deprecation Warnings
+
+When you use a legacy function, SIndexR emits a warning on first use in your session:
+
+```
+Warning: SIndexR_HtAgeToSI() is a legacy compatibility interface; 
+prefer HT2SI() for new code.
+```
+
+This warning appears only once per session to avoid cluttering output.
+
+## Migration Tips
+
+1. **Replace direct function names**: Simply swap the old name for the new one.
+2. **Use species codes**: Instead of remembering numeric curve indices, use species codes like `"SW"`, `"FDI"`, `"HWC"`.
+3. **Simplify return handling**: Modern functions return numeric values directly, eliminating the need to extract from a list.
+4. **Enable external DLL support**: Modern wrappers automatically use external SIndex DLLs if configured via `SIndexR_SetExternalDll()`.
+
+## Backward Compatibility
+
+All legacy functions remain available and functional. Code using legacy interfaces will continue to work without modification. However, new code should prefer the modern wrappers for better usability and future enhancements.
