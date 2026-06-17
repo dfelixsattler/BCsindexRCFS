@@ -23,8 +23,16 @@ SI2AGE(1, 30, 1, 30)
 SIY2BH(1, 30)
 ```
 
-Run the small example script included in the package:
+Run the example scripts included in the package:
 
 ```sh
 Rscript -e "library(SIndexR); source(system.file('examples','wrappers_example.R', package='SIndexR'))"
+Rscript -e "library(SIndexR); source(system.file('examples','psp_workflow_example.R', package='SIndexR'))"
+Rscript -e "library(SIndexR); source(system.file('examples','treelist_workflow_example.R', package='SIndexR'))"
+```
+
+For full narrative workflow examples, see:
+
+```r
+vignette("workflow-integration", package = "SIndexR")
 ```

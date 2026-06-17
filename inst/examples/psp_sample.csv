@@ -1,0 +1,7 @@
+plot_id,measurement_year,species,bh_age,dom_height_m,age_type,si_est_type
+PSP001,2015,SW,35,18.7,1,0
+PSP001,2020,SW,40,22.1,1,0
+PSP002,2016,FDI,30,15.9,1,0
+PSP002,2021,FDI,35,18.8,1,0
+PSP003,2018,SW,28,14.6,1,0
+PSP003,2023,SW,33,18.2,1,0

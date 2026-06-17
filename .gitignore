@@ -39,3 +39,5 @@ developmentTools\.R
 src/*.o
 src/*.obj
 src/*.dll.backup
+/doc/
+/Meta/

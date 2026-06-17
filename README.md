@@ -10,6 +10,25 @@ The project is still under development.
 library(devtools)
 install_github("bcgov/SIndexR")
 
+## Workflow integration examples
+The package now includes practical workflow examples using generic datasets:
+
+- Permanent Sample Plot (PSP) style productivity estimation
+- Treelist preparation for growth and yield model inputs
+
+Run the scripts directly:
+
+```r
+source(system.file("examples", "psp_workflow_example.R", package = "SIndexR"))
+source(system.file("examples", "treelist_workflow_example.R", package = "SIndexR"))
+```
+
+Open the full vignette:
+
+```r
+vignette("workflow-integration", package = "SIndexR")
+```
+
 ## To get help or report an Issue
 Please file an [issue](https://github.com/bcgov/SIndexR/issues/).
 
