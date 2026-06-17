@@ -38,6 +38,7 @@ developmentTools\.R
 # Local compile artifacts
 src/*.o
 src/*.obj
+src/*.dll
 src/*.dll.backup
 /doc/
 /Meta/
