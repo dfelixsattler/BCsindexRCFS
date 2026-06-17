@@ -28,19 +28,45 @@ data pipelines.
 
 ## Installation
 
-Install from a local checkout:
+### From local tarball (recommended for testing)
+
+The built source package is available at: `C:\SIndexR_build\SIndexRCFS_0.2.0.tar.gz`
+
+In RStudio:
+1. **Tools** → **Install Packages**
+2. Change to "Package Archive File (.tar.gz)"
+3. Browse to the tarball file and click **Install**
+
+Or via command line:
+```r
+install.packages("C:/SIndexR_build/SIndexRCFS_0.2.0.tar.gz", repos=NULL, type="source")
+```
+
+### From local source checkout:
 
 ```r
 if (!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
 remotes::install_local(".", build_vignettes = TRUE)
 ```
 
-Or install from GitHub (replace with your repo path):
+### From GitHub (replace with your repo path):
 
 ```r
 if (!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
 remotes::install_github("<owner>/SIndexRCFS", build_vignettes = TRUE)
 ```
+
+### Dependency management
+
+R automatically installs all declared dependencies from DESCRIPTION:
+- **Imports** (required): Rcpp, stats, utils, data.table
+- **Suggests** (optional): testthat, knitr, rmarkdown
+
+### Development directory structure
+
+- `C:\SIndexR` — Main development repository (current)
+- `C:\SIndexR_build` — Built package artifacts (tarballs)
+- `C:\SIndexRCFS_old` — Archived early test package (deprecated)
 
 ## Quick start
 
