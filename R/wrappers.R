@@ -277,6 +277,7 @@ SI2AGE <- function(cu_index = NULL, site_height, age_type = 1, site_index, y2bh 
 #' @param species integer/numeric species index or species code (e.g. "SW", "FDI")
 #' @param curve curve selector when species is provided: "default", "first", numeric curve index, or curve name
 #' @param fiz optional FIZ code used when remapping species codes
+#' @param ... additional arguments passed through compatibility aliases
 #' @return numeric years to breast height
 #' @examples
 #' SIY2BH(1, 30)
@@ -301,6 +302,7 @@ Y2BH <- function(...) SIY2BH(...)
 #' @param species integer/numeric species index or species code (e.g. "SW", "FDI")
 #' @param curve curve selector when species is provided: "default", "first", numeric curve index, or curve name
 #' @param fiz optional FIZ code used when remapping species codes
+#' @param ... additional arguments passed through compatibility aliases
 #' @return numeric years to breast height rounded to 0.5-year steps
 #' @examples
 #' SIY2BH05(1, 30)
@@ -327,6 +329,7 @@ Y2BH05 <- function(...) SIY2BH05(...)
 #' @param species integer/numeric species index or species code (e.g. "SW", "FDI")
 #' @param curve curve selector when species is provided: "default", "first", numeric curve index, or curve name
 #' @param fiz optional FIZ code used when remapping species codes
+#' @param ... additional arguments passed through compatibility aliases
 #' @return numeric converted age
 #' @examples
 #' Age2Age(cu_index = 112, age1 = 50, age1_type = 1, age2_type = 0, y2bh = 2)
@@ -356,6 +359,7 @@ AgeToAge <- function(...) Age2Age(...)
 #' @param species integer/numeric species index or species code (e.g. "SW", "FDI")
 #' @param site_class character, one of "G" (good), "M" (medium), "P" (poor), "L" (low)
 #' @param fiz optional FIZ code (character: A-C for coast, D-L for interior)
+#' @param ... additional arguments passed through compatibility aliases
 #' @return numeric site index (height in metres)
 #' @examples
 #' SC2SI("FDI", "M")

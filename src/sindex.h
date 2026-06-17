@@ -1,5 +1,5 @@
-#ifndef sindex.h
-#define sindex.h
+#ifndef SINDEX_H
+#define SINDEX_H
 #include <Rcpp.h>
 
 /*

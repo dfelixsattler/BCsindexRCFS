@@ -46,6 +46,8 @@ AgeToAge(...)
 \item{curve}{curve selector when species is provided: "default", "first", numeric curve index, or curve name}
 
 \item{fiz}{optional FIZ code used when remapping species codes}
+
+\item{...}{additional arguments passed through compatibility aliases}
 }
 \value{
 numeric converted age

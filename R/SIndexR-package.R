@@ -1,5 +1,7 @@
 #' @useDynLib SIndexR, .registration=TRUE
 #' @importFrom Rcpp evalCpp
+#' @importFrom stats aggregate optimize sd
+#' @importFrom utils read.csv write.csv
 #' @keywords internal
 #' @seealso See `vignette("legacy-interfaces")` for a complete reference of legacy
 #'   function mappings and migration guidance.

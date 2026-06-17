@@ -15,6 +15,8 @@ SiteClassToIndex(...)
 \item{site_class}{character, one of "G" (good), "M" (medium), "P" (poor), "L" (low)}
 
 \item{fiz}{optional FIZ code (character: A-C for coast, D-L for interior)}
+
+\item{...}{additional arguments passed through compatibility aliases}
 }
 \value{
 numeric site index (height in metres)

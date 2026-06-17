@@ -11,12 +11,13 @@ Encoding: UTF-8
 LazyData: true
 Imports: 
   Rcpp (>= 0.12.14),
-  rmarkdown,
-  methods,
+  stats,
+  utils,
   data.table
 Suggests:
   testthat,
-  knitr
+  knitr,
+  rmarkdown
 VignetteBuilder: knitr
 LinkingTo: Rcpp
 Config/roxygen2/version: 8.0.0
