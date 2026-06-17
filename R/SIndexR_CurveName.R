@@ -23,6 +23,7 @@
 #' @note
 #'    Curve name string examples: "Bruce (1981)", "Nigh (1998)".
 #' @rdname SIndexR_CurveName
+#' @export
 SIndexR_CurveName <- function(cu_index){
   cu_index <- wholeToInteger(cu_index, "cu_index")
   return(unlist(lapply(cu_index, function(s) Sindex_CurveName(s))))

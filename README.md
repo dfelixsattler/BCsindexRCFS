@@ -16,10 +16,10 @@ data pipelines.
 
 ## What has changed in this fork
 
-- Added modern wrapper interfaces for core conversions (`HT2SI`, `SI2HT`,
-    `SI2AGE`, `SI2SI`, `SC2SI`, `SIY2BH`, `SIY2BH05`).
-- Added modern metadata aliases (`DefaultCurve`, `SpeciesCode`,
-    `SpeciesName`).
+- Added modern wrapper interfaces for core conversions (`ht_age_to_si`, `si_to_ht`,
+    `si_ht_to_age`, `si_to_si`, `SC2SI`, `si_to_y2bh`, `si_to_y2bh05`).
+- Added modern metadata aliases (`default_curve`, `species_code`,
+    `species_name`).
 - Added once-per-session legacy warnings for superseded conversion wrappers.
 - Added workflow examples with generic data for:
     - Permanent Sample Plot (PSP) productivity estimation.
@@ -74,13 +74,13 @@ R automatically installs all declared dependencies from DESCRIPTION:
 library(SIndexRCFS)
 
 # Height -> Site index
-HT2SI(age = 50, age_type = 1, height = 30, species = "SW")
+ht_age_to_si(age = 50, age_type = 1, height = 30, species = "SW")
 
 # Site index -> Height
-SI2HT(iage = 50, age_type = 1, site_index = 30, species = "SW")
+si_to_ht(iage = 50, age_type = 1, site_index = 30, species = "SW")
 
 # Site index -> Age
-SI2AGE(site_height = 30, age_type = 1, site_index = 30, species = "SW")
+si_ht_to_age(site_height = 30, age_type = 1, site_index = 30, species = "SW")
 ```
 
 ## Workflow examples

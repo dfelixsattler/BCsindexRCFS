@@ -27,17 +27,6 @@ SIndexR_SetExternalDll <- function(dll_path) {
   TRUE
 }
 
-#' Disable external Sindex DLL backend
-#'
-#' Unloads the external DLL and returns wrappers to built-in implementation.
-#'
-#' @return invisible TRUE
-#' @export
-SIndexR_ClearExternalDll <- function() {
-  sindex_ext_clear_dll()
-  invisible(TRUE)
-}
-
 #' External DLL backend status
 #'
 #' @return list with `loaded` and `dll_path`
@@ -81,6 +70,16 @@ sindex_class_to_index <- function(sp_index, site_class, fiz) {
   class_to_index(as.integer(sp_index), site_class, fiz)
 }
 
+sindex_cpp_age_to_age <- function(cu_index, age1, age1_type, age2_type, y2bh) {
+  .Call(`_SIndexRCFS_age_to_age`,
+    as.integer(cu_index),
+    as.numeric(age1),
+    as.integer(age1_type),
+    as.integer(age2_type),
+    as.numeric(y2bh)
+  )
+}
+
 # Curves that use a +/-0.5 adjustment in age conversion logic.
 sindex_age2age_halfyear_curves <- c(
   97L, 103L, 92L, 102L, 118L, 93L, 94L, 101L, 77L, 13L, 116L,
@@ -91,7 +90,7 @@ sindex_age2age_halfyear_curves <- c(
 
 sindex_age_to_age <- function(cu_index, age1, age1_type, age2_type, y2bh) {
   if (!sindex_use_external()) {
-    return(age_to_age(as.integer(cu_index), as.numeric(age1), as.integer(age1_type), as.integer(age2_type), as.numeric(y2bh)))
+    return(sindex_cpp_age_to_age(as.integer(cu_index), as.numeric(age1), as.integer(age1_type), as.integer(age2_type), as.numeric(y2bh)))
   }
 
   # External mode: reproduce age_to_age behavior from AGE2AGE.cpp.
@@ -108,7 +107,26 @@ sindex_age_to_age <- function(cu_index, age1, age1_type, age2_type, y2bh) {
   }
 
   # Preserve built-in error behavior for unsupported age type combinations.
-  age_to_age(as.integer(cu_index), as.numeric(age1), as.integer(age1_type), as.integer(age2_type), as.numeric(y2bh))
+  sindex_cpp_age_to_age(as.integer(cu_index), as.numeric(age1), as.integer(age1_type), as.integer(age2_type), as.numeric(y2bh))
+}
+
+#' Disable external Sindex DLL backend
+#'
+#' Unloads the external DLL and returns wrappers to built-in implementation.
+#'
+#' @return invisible TRUE
+#' @examples
+#' clear_external_dll()
+#' @export
+clear_external_dll <- function() {
+  sindex_ext_clear_dll()
+  invisible(TRUE)
+}
+
+#' @rdname clear_external_dll
+#' @export
+SIndexR_ClearExternalDll <- function() {
+  clear_external_dll()
 }
 
 sindex_index_to_age <- function(cu_index, site_height, age_type, site_index, y2bh) {

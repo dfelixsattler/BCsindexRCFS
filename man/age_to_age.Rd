@@ -2,9 +2,10 @@
 % Please edit documentation in R/SIndexR_AgeToAge.R, R/wrappers.R
 \name{SIndexR_AgeToAge}
 \alias{SIndexR_AgeToAge}
+\alias{age_to_age}
 \alias{Age2Age}
 \alias{AgeToAge}
-\title{Legacy alias for Age2Age}
+\title{Legacy alias for age_to_age}
 \usage{
 SIndexR_AgeToAge(
   cu_index = NULL,
@@ -17,7 +18,7 @@ SIndexR_AgeToAge(
   fiz = NULL
 )
 
-Age2Age(
+age_to_age(
   cu_index = NULL,
   age1,
   age1_type,
@@ -27,6 +28,8 @@ Age2Age(
   curve = "default",
   fiz = NULL
 )
+
+Age2Age(...)
 
 AgeToAge(...)
 }
@@ -56,11 +59,11 @@ numeric converted age
 }
 \description{
 `SIndexR_AgeToAge()` is kept for backward compatibility.
-Prefer using `Age2Age()` for new code.
+Prefer using `age_to_age()` for new code.
 
 Converts age from one age type (breast height or total) to another.
 }
 \examples{
-Age2Age(cu_index = 112, age1 = 50, age1_type = 1, age2_type = 0, y2bh = 2)
-Age2Age(age1 = 50, age1_type = 1, age2_type = 0, species = "SW")
+age_to_age(cu_index = 112, age1 = 50, age1_type = 1, age2_type = 0, y2bh = 2)
+age_to_age(age1 = 50, age1_type = 1, age2_type = 0, species = "SW")
 }

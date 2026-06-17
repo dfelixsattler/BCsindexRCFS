@@ -21,7 +21,7 @@ These legacy functions perform core site index conversions but return results in
 
 | Legacy Function | Modern Function | Key Improvements |
 |-----------------|-----------------|------------------|
-| `SIndexR_HtAgeToSI(curve, age, ageType, height, estType)` | `HT2SI(cu_index = NULL, age, age_type = 1, height, si_est_type = 0, species = NULL, curve = "default", fiz = NULL)` | Accepts species codes, simpler return value, external DLL support |
+| `SIndexR_HtAgeToSI(curve, age, ageType, height, estType)` | `ht_age_to_si(cu_index = NULL, age, age_type = 1, height, si_est_type = 0, species = NULL, curve = "default", fiz = NULL)` | Accepts species codes, simpler return value, external DLL support |
 
 **Example:**
 ```r
@@ -30,16 +30,16 @@ result <- SIndexR_HtAgeToSI(1, 50, 1, 30, 0)
 si <- result$output
 
 # New way (modern)
-si <- HT2SI(1, 50, 1, 30, 0)
+si <- ht_age_to_si(1, 50, 1, 30, 0)
 # Or with species code:
-si <- HT2SI(age = 50, height = 30, species = "SW")
+si <- ht_age_to_si(age = 50, height = 30, species = "SW")
 ```
 
 ### Age to Height (Site Index)
 
 | Legacy Function | Modern Function | Key Improvements |
 |-----------------|-----------------|------------------|
-| `SIndexR_AgeSIToHt(curve, age, ageType, siteIndex, y2bh)` | `SI2HT(cu_index = NULL, iage, age_type = 1, site_index, y2bh = NA_real_, pi = 0.5, species = NULL, curve = "default", fiz = NULL)` | Accepts species codes, simpler return value, external DLL support |
+| `SIndexR_AgeSIToHt(curve, age, ageType, siteIndex, y2bh)` | `si_to_ht(cu_index = NULL, iage, age_type = 1, site_index, y2bh = NA_real_, pi = 0.5, species = NULL, curve = "default", fiz = NULL)` | Accepts species codes, simpler return value, external DLL support |
 
 **Example:**
 ```r
@@ -48,16 +48,16 @@ result <- SIndexR_AgeSIToHt(1, 50, 1, 30, 2)
 height <- result$output
 
 # New way (modern)
-height <- SI2HT(1, 50, 1, 30, 2)
+height <- si_to_ht(1, 50, 1, 30, 2)
 # Or with species code:
-height <- SI2HT(iage = 50, site_index = 30, species = "SW")
+height <- si_to_ht(iage = 50, site_index = 30, species = "SW")
 ```
 
 ### Height to Age (Site Index)
 
 | Legacy Function | Modern Function | Key Improvements |
 |-----------------|-----------------|------------------|
-| `SIndexR_HtSIToAge(curve, height, ageType, siteIndex, y2bh)` | `SI2AGE(cu_index = NULL, site_height, age_type = 1, site_index, y2bh = NA_real_, species = NULL, curve = "default", fiz = NULL)` | Accepts species codes, simpler return value, external DLL support |
+| `SIndexR_HtSIToAge(curve, height, ageType, siteIndex, y2bh)` | `si_ht_to_age(cu_index = NULL, site_height, age_type = 1, site_index, y2bh = NA_real_, species = NULL, curve = "default", fiz = NULL)` | Accepts species codes, simpler return value, external DLL support |
 
 **Example:**
 ```r
@@ -66,9 +66,9 @@ result <- SIndexR_HtSIToAge(1, 30, 1, 30, 2)
 age <- result$output
 
 # New way (modern)
-age <- SI2AGE(1, 30, 1, 30, 2)
+age <- si_ht_to_age(1, 30, 1, 30, 2)
 # Or with species code:
-age <- SI2AGE(site_height = 30, site_index = 30, species = "SW")
+age <- si_ht_to_age(site_height = 30, site_index = 30, species = "SW")
 ```
 
 ### Site Class to Site Index
@@ -93,7 +93,7 @@ si <- SC2SI("FDI", "M")
 
 | Legacy Function | Modern Function | Key Improvements |
 |-----------------|-----------------|------------------|
-| `SIndexR_Y2BH05(curve, siteIndex)` | `SIY2BH05(cu_index = NULL, site_index, species = NULL, curve = "default", fiz = NULL)` | Accepts species codes, simpler return value, external DLL support |
+| `SIndexR_Y2BH05(curve, siteIndex)` | `si_to_y2bh05(cu_index = NULL, site_index, species = NULL, curve = "default", fiz = NULL)` | Accepts species codes, simpler return value, external DLL support |
 
 **Example:**
 ```r
@@ -102,9 +102,9 @@ result <- SIndexR_Y2BH05(1, 30)
 y2bh <- result$output
 
 # New way (modern)
-y2bh <- SIY2BH05(1, 30)
+y2bh <- si_to_y2bh05(1, 30)
 # Or with species code:
-y2bh <- SIY2BH05(site_index = 30, species = "SW")
+y2bh <- si_to_y2bh05(site_index = 30, species = "SW")
 ```
 
 ## Return Value Changes
@@ -121,7 +121,7 @@ if (result$error == 0) {
 }
 
 # Modern pattern
-si <- HT2SI(1, 50, 1, 30, 0)
+si <- ht_age_to_si(1, 50, 1, 30, 0)
 if (is.numeric(si) && si > 0) {
   # Use si directly
 }
@@ -133,7 +133,7 @@ When you use a legacy function, SIndexR emits a warning on first use in your ses
 
 ```
 Warning: SIndexR_HtAgeToSI() is a legacy compatibility interface; 
-prefer HT2SI() for new code.
+prefer ht_age_to_si() for new code.
 ```
 
 This warning appears only once per session to avoid cluttering output.
@@ -162,13 +162,13 @@ Recommended action categories:
 | `SIndexR_CurveSource` | Curve metadata lookup | Keep | Low | Stable utility; consistent with metadata family |
 | `SIndexR_CurveToSpecies` | Curve-to-species mapping | Add modern alias | Medium | Candidate alias: `CurveSpecies()` returning typed vector |
 | `SIndexR_CurveUse` | Curve usage flag/metadata | Keep | Low | Keep as compatibility helper unless usage friction appears |
-| `SIndexR_DefCurve` | Default curve for species | Add modern alias | High | Candidate alias: `DefaultCurve()` with species-code input |
+| `SIndexR_DefCurve` | Default curve for species | Add modern alias | High | Candidate alias: `default_curve()` with species-code input |
 | `SIndexR_DefCurveEst` | Default curve estimation mode | Keep | Low | Specialized, low-frequency helper |
 | `SIndexR_DefGICurve` | Default GI curve lookup | Keep | Low | Specialized; modernizing can wait |
 | `SIndexR_FirstSpecies` | Species iteration start | Add modern alias | Medium | Candidate alias: `SpeciesFirst()` for readability |
 | `SIndexR_NextSpecies` | Species iteration step | Add modern alias | Medium | Candidate alias: `SpeciesNext()` and iterator-style docs |
-| `SIndexR_SpecCode` | Species index to code | Add modern alias | High | Candidate alias: `SpeciesCode()` with vectorized behavior |
-| `SIndexR_SpecName` | Species index to full name | Add modern alias | High | Candidate alias: `SpeciesName()` with vectorized behavior |
+| `SIndexR_SpecCode` | Species index to code | Add modern alias | High | Candidate alias: `species_code()` with vectorized behavior |
+| `SIndexR_SpecName` | Species index to full name | Add modern alias | High | Candidate alias: `species_name()` with vectorized behavior |
 | `SIndexR_SpecUse` | Species usage flag/metadata | Keep | Medium | Keep for now; modernize only if semantics need clarification |
 | `SIndexR_VersionNumber` | Core SIndex version | Add modern alias | Medium | Candidate alias: `SIndexVersion()` for discoverability |
 

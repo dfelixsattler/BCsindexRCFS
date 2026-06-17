@@ -12,7 +12,7 @@ PrintCurveOptions(species, fiz = NULL)
 \item{fiz}{optional FIZ code when remapping species codes}
 }
 \value{
-invisibly returns the same value as `CurveOptions()`
+invisibly returns the same value as `curve_options()`
 }
 \description{
 Prints available curves in a concise table and marks the default curve with `*`.

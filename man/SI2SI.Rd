@@ -2,6 +2,7 @@
 % Please edit documentation in R/wrappers.R
 \name{SI2SI}
 \alias{SI2SI}
+\alias{si_to_si}
 \title{Convert site index between species}
 \usage{
 SI2SI(
@@ -11,6 +12,8 @@ SI2SI(
   source_fiz = NULL,
   target_fiz = NULL
 )
+
+si_to_si(...)
 }
 \arguments{
 \item{source_species}{integer/numeric species index or species code (e.g. "BA", "HWC")}

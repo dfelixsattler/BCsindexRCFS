@@ -3,11 +3,14 @@
 \name{SC2SI}
 \alias{SC2SI}
 \alias{SiteClassToIndex}
+\alias{site_class_to_index}
 \title{Convert site class to site index}
 \usage{
 SC2SI(species, site_class, fiz = NULL)
 
 SiteClassToIndex(...)
+
+site_class_to_index(...)
 }
 \arguments{
 \item{species}{integer/numeric species index or species code (e.g. "SW", "FDI")}

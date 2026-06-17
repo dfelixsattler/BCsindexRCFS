@@ -11,10 +11,10 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 
-#' Legacy alias for Age2Age
+#' Legacy alias for age_to_age
 #'
 #' `SIndexR_AgeToAge()` is kept for backward compatibility.
-#' Prefer using `Age2Age()` for new code.
+#' Prefer using `age_to_age()` for new code.
 #'
 #' @param cu_index numeric or integer, explicit curve index
 #' @param age1 numeric, initial age value
@@ -25,11 +25,11 @@
 #' @param curve curve selector when species is provided: "default", "first", numeric curve index, or curve name
 #' @param fiz optional FIZ code used when remapping species codes
 #' @return numeric converted age
-#' @rdname Age2Age
+#' @rdname age_to_age
 #' @export
 SIndexR_AgeToAge <- function(cu_index = NULL, age1, age1_type, age2_type, y2bh = NA_real_,
                                            species = NULL, curve = "default", fiz = NULL) {
-   Age2Age(
+   age_to_age(
       cu_index = cu_index,
       age1 = age1,
       age1_type = age1_type,

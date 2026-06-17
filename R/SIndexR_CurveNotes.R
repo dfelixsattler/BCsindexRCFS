@@ -19,6 +19,7 @@
 #'    If input parameter is not a valid curve index, the return is the
 #'    null pointer.
 #' @rdname SIndexR_CurveNotes
+#' @export
 SIndexR_CurveNotes <- function(cu_index){
   cu_index <- wholeToInteger(cu_index, "cu_index")
   return(unlist(lapply(cu_index, function(s) Sindex_CurveNotes(s))))

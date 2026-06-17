@@ -4,25 +4,30 @@
 \name{SIndexRCFS-package}
 \alias{SIndexRCFS}
 \alias{SIndexRCFS-package}
-\title{SIndexRCFS: Site Index Tools in R for PSP and Growth Workflows}
+\title{SIndexRCFS: Site Tools in R}
 \description{
-A modernized fork of the original SIndexR package that exposes site index routines for practical forestry workflows in R. This package adds consistent wrapper APIs, external DLL backend support, legacy compatibility guidance, and end-to-end examples for Permanent Sample Plot (PSP) and growth-and-yield treelist preparation.
+A modernized fork of the original SIndexR package that exposes SiteTools' site index routines for practical forestry workflows in R. This package adds consistent wrapper APIs, external DLL backend support, and legacy compatibility guidance. Examples of usage for Permanent Sample Plots (PSP) and growth-and-yield models is provided.
+}
+\details{
+The SiteTools external DLL backend used by this package is published by
+  the Government of British Columbia and is available at:
+  https://www2.gov.bc.ca/gov/content/industry/forestry/managing-our-forest-resources/forest-inventory/field-forms-and-software/software-download#SiteTools
 }
 \seealso{
 See `vignette("legacy-interfaces")` for a complete reference of legacy
   function mappings and migration guidance.
 }
 \author{
-\strong{Maintainer}: Derek Felix Sattler \email{derekfelixsattler@gmail.com}
+\strong{Maintainer}: Derek Felix Sattler \email{Derek.Sattler@nrcan-rncan.gc.ca}
 
 Authors:
 \itemize{
-  \item Derek Felix Sattler \email{derekfelixsattler@gmail.com}
+  \item Derek Felix Sattler \email{Derek.Sattler@nrcan-rncan.gc.ca}
 }
 
 Other contributors:
 \itemize{
-  \item Yong Luo (Original SIndexR package author) [contributor]
+  \item Yong Luo \email{Yong.Luo@gov.bc.ca} (Original SIndexR package author) [contributor]
   \item Ken Polsson (Original Sindex C implementation) [contributor]
 }
 

@@ -2,6 +2,7 @@
 % Please edit documentation in R/wrappers.R
 \name{SIY2BH}
 \alias{SIY2BH}
+\alias{si_to_y2bh}
 \alias{Y2BH}
 \title{Years to breast height (y2bh)}
 \usage{
@@ -12,6 +13,8 @@ SIY2BH(
   curve = "default",
   fiz = NULL
 )
+
+si_to_y2bh(...)
 
 Y2BH(...)
 }

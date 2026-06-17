@@ -2,6 +2,7 @@
 % Please edit documentation in R/wrappers.R
 \name{SIY2BH05}
 \alias{SIY2BH05}
+\alias{si_to_y2bh05}
 \alias{Y2BH05}
 \title{Years to breast height rounded to 0.5}
 \usage{
@@ -12,6 +13,8 @@ SIY2BH05(
   curve = "default",
   fiz = NULL
 )
+
+si_to_y2bh05(...)
 
 Y2BH05(...)
 }

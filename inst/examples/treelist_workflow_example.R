@@ -9,17 +9,17 @@ stands <- read.csv(stands_path, stringsAsFactors = FALSE)
 trees <- read.csv(trees_path, stringsAsFactors = FALSE)
 
 stands$site_index_m <- mapply(
-  function(sp, age, h) HT2SI(age = age, age_type = 1, height = h, species = sp),
+  function(sp, age, h) ht_age_to_si(age = age, age_type = 1, height = h, species = sp),
   stands$dom_species, stands$dom_bh_age, stands$dom_height_m
 )
 
 stands$y2bh_years <- mapply(
-  function(sp, si) SIY2BH(site_index = si, species = sp),
+  function(sp, si) si_to_y2bh(site_index = si, species = sp),
   stands$dom_species, stands$site_index_m
 )
 
 stands$proj_height_m <- mapply(
-  function(sp, age, si, y2bh) SI2HT(iage = age, age_type = 1, site_index = si, y2bh = y2bh, species = sp),
+  function(sp, age, si, y2bh) si_to_ht(iage = age, age_type = 1, site_index = si, y2bh = y2bh, species = sp),
   stands$dom_species, stands$projection_age, stands$site_index_m, stands$y2bh_years
 )
 

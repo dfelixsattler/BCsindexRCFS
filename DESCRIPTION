@@ -4,15 +4,15 @@ Title: Site Index Tools in R for PSP and Growth Workflows
 Version: 0.2.0
 Date: 2026-06-17
 Authors@R: c(
-  person("Derek Felix", "Sattler", email = "derekfelixsattler@gmail.com", role = c("aut", "cre")),
-  person("Yong", "Luo", role = "ctb", comment = "Original SIndexR package author"),
+  person("Derek Felix", "Sattler", email = "Derek.Sattler@nrcan-rncan.gc.ca", role = c("aut", "cre")),
+  person("Yong", "Luo", email = "Yong.Luo@gov.bc.ca", role = "ctb", comment = "Original SIndexR package author"),
   person("Ken", "Polsson", role = "ctb", comment = "Original Sindex C implementation")
  )
 Description: A modernized fork of the original SIndexR package that exposes
-  site index routines for practical forestry workflows in R. This package
-  adds consistent wrapper APIs, external DLL backend support, legacy
-  compatibility guidance, and end-to-end examples for Permanent Sample Plot
-  (PSP) and growth-and-yield treelist preparation.
+  SiteTools' site index routines for practical forestry workflows in R. This
+  package adds consistent wrapper APIs, external DLL backend support, and
+  legacy compatibility guidance. Examples of usage for Permanent Sample Plots
+  (PSP) and growth-and-yield models is provided.
 License: Apache License (== 2.0) | file LICENSE
 Encoding: UTF-8
 LazyData: true

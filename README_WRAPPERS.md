@@ -8,33 +8,32 @@ how they fit into common forestry analysis workflows.
 ```r
 library(SIndexRCFS)
 
-# Height -> Site index
-HT2SI(age = 50, age_type = 1, height = 30, species = "SW")
+# Height + age -> Site index
+ht_age_to_si(age = 50, age_type = 1, height = 30, species = "SW")
 
 # Site index -> Height
-SI2HT(iage = 50, age_type = 1, site_index = 30, species = "SW")
+si_to_ht(iage = 50, age_type = 1, site_index = 30, species = "SW")
 
-# Site index -> Age
-SI2AGE(site_height = 30, age_type = 1, site_index = 30, species = "SW")
+# Site index + height -> Age
+si_ht_to_age(site_height = 30, age_type = 1, site_index = 30, species = "SW")
 
 # Site index -> Years to breast height
-SIY2BH(site_index = 30, species = "SW")
+si_to_y2bh(site_index = 30, species = "SW")
 
 # Site index conversion between species
-SI2SI("BA", 20, "HWC")
+si_to_si("BA", 20, "HWC")
 ```
 
 ## Metadata helpers
 
 ```r
 # Available curves and defaults for a species
-CurveOptions("SW")
-PrintCurveOptions("SW")
+curve_options("SW")
 
 # Modern metadata aliases
-DefaultCurve("SW")
-SpeciesCode("SW")
-SpeciesName("SW")
+default_curve("SW")
+species_code("SW")
+species_name("SW")
 ```
 
 ## Run packaged examples

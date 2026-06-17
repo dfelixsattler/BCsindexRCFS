@@ -2,9 +2,12 @@
 % Please edit documentation in R/wrappers.R
 \name{DefaultCurve}
 \alias{DefaultCurve}
+\alias{default_curve}
 \title{Get default curve index for species}
 \usage{
 DefaultCurve(species, fiz = NULL)
+
+default_curve(...)
 }
 \arguments{
 \item{species}{integer/numeric species index or species code (e.g. "SW", "FDI")}
