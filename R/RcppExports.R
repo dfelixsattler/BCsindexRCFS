@@ -2,142 +2,142 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 age_to_age <- function(cu_index, age1, age1_type, age2_type, y2bh) {
-    .Call(`_SIndexR_age_to_age`, cu_index, age1, age1_type, age2_type, y2bh)
+    .Call(`_SIndexRCFS_age_to_age`, cu_index, age1, age1_type, age2_type, y2bh)
 }
 
 fiz_check <- function(fiz) {
-    .Call(`_SIndexR_fiz_check`, fiz)
+    .Call(`_SIndexRCFS_fiz_check`, fiz)
 }
 
 height_to_index <- function(cu_index, age, age_type, height, si_est_type) {
-    .Call(`_SIndexR_height_to_index`, cu_index, age, age_type, height, si_est_type)
+    .Call(`_SIndexRCFS_height_to_index`, cu_index, age, age_type, height, si_est_type)
 }
 
 class_to_index <- function(sp_index, sitecl, fiz) {
-    .Call(`_SIndexR_class_to_index`, sp_index, sitecl, fiz)
+    .Call(`_SIndexRCFS_class_to_index`, sp_index, sitecl, fiz)
 }
 
 index_to_age <- function(cu_index, site_height, age_type, site_index, y2bh) {
-    .Call(`_SIndexR_index_to_age`, cu_index, site_height, age_type, site_index, y2bh)
+    .Call(`_SIndexRCFS_index_to_age`, cu_index, site_height, age_type, site_index, y2bh)
 }
 
 index_to_height <- function(cu_index, iage, age_type, site_index, y2bh, pi) {
-    .Call(`_SIndexR_index_to_height`, cu_index, iage, age_type, site_index, y2bh, pi)
+    .Call(`_SIndexRCFS_index_to_height`, cu_index, iage, age_type, site_index, y2bh, pi)
 }
 
 Sindex_VersionNumber <- function() {
-    .Call(`_SIndexR_Sindex_VersionNumber`)
+    .Call(`_SIndexRCFS_Sindex_VersionNumber`)
 }
 
 Sindex_FirstSpecies <- function() {
-    .Call(`_SIndexR_Sindex_FirstSpecies`)
+    .Call(`_SIndexRCFS_Sindex_FirstSpecies`)
 }
 
 Sindex_NextSpecies <- function(sp_index) {
-    .Call(`_SIndexR_Sindex_NextSpecies`, sp_index)
+    .Call(`_SIndexRCFS_Sindex_NextSpecies`, sp_index)
 }
 
 Sindex_SpecUse <- function(sp_index) {
-    .Call(`_SIndexR_Sindex_SpecUse`, sp_index)
+    .Call(`_SIndexRCFS_Sindex_SpecUse`, sp_index)
 }
 
 Sindex_DefCurve <- function(sp_index) {
-    .Call(`_SIndexR_Sindex_DefCurve`, sp_index)
+    .Call(`_SIndexRCFS_Sindex_DefCurve`, sp_index)
 }
 
 Sindex_DefGICurve <- function(sp_index) {
-    .Call(`_SIndexR_Sindex_DefGICurve`, sp_index)
+    .Call(`_SIndexRCFS_Sindex_DefGICurve`, sp_index)
 }
 
 Sindex_DefCurveEst <- function(sp_index, estab) {
-    .Call(`_SIndexR_Sindex_DefCurveEst`, sp_index, estab)
+    .Call(`_SIndexRCFS_Sindex_DefCurveEst`, sp_index, estab)
 }
 
 Sindex_FirstCurve <- function(sp_index) {
-    .Call(`_SIndexR_Sindex_FirstCurve`, sp_index)
+    .Call(`_SIndexRCFS_Sindex_FirstCurve`, sp_index)
 }
 
 Sindex_NextCurve <- function(sp_index, cu_index) {
-    .Call(`_SIndexR_Sindex_NextCurve`, sp_index, cu_index)
+    .Call(`_SIndexRCFS_Sindex_NextCurve`, sp_index, cu_index)
 }
 
 Sindex_CurveUse <- function(cu_index) {
-    .Call(`_SIndexR_Sindex_CurveUse`, cu_index)
+    .Call(`_SIndexRCFS_Sindex_CurveUse`, cu_index)
 }
 
 Sindex_CurveToSpecies <- function(cu_index) {
-    .Call(`_SIndexR_Sindex_CurveToSpecies`, cu_index)
+    .Call(`_SIndexRCFS_Sindex_CurveToSpecies`, cu_index)
 }
 
 Sindex_SITOSI <- function(sp_index1, site, sp_index2) {
-    .Call(`_SIndexR_Sindex_SITOSI`, sp_index1, site, sp_index2)
+    .Call(`_SIndexRCFS_Sindex_SITOSI`, sp_index1, site, sp_index2)
 }
 
 Sindex_SpecCode <- function(sp_index) {
-    .Call(`_SIndexR_Sindex_SpecCode`, sp_index)
+    .Call(`_SIndexRCFS_Sindex_SpecCode`, sp_index)
 }
 
 Sindex_SpecName <- function(sp_index) {
-    .Call(`_SIndexR_Sindex_SpecName`, sp_index)
+    .Call(`_SIndexRCFS_Sindex_SpecName`, sp_index)
 }
 
 Sindex_CurveName <- function(cu_index) {
-    .Call(`_SIndexR_Sindex_CurveName`, cu_index)
+    .Call(`_SIndexRCFS_Sindex_CurveName`, cu_index)
 }
 
 Sindex_CurveSource <- function(cu_index) {
-    .Call(`_SIndexR_Sindex_CurveSource`, cu_index)
+    .Call(`_SIndexRCFS_Sindex_CurveSource`, cu_index)
 }
 
 Sindex_CurveNotes <- function(cu_index) {
-    .Call(`_SIndexR_Sindex_CurveNotes`, cu_index)
+    .Call(`_SIndexRCFS_Sindex_CurveNotes`, cu_index)
 }
 
 si_y2bh <- function(cu_index, site_index) {
-    .Call(`_SIndexR_si_y2bh`, cu_index, site_index)
+    .Call(`_SIndexRCFS_si_y2bh`, cu_index, site_index)
 }
 
 si_y2bh05 <- function(cu_index, site_index) {
-    .Call(`_SIndexR_si_y2bh05`, cu_index, site_index)
+    .Call(`_SIndexRCFS_si_y2bh05`, cu_index, site_index)
 }
 
 species_map <- function(sc) {
-    .Call(`_SIndexR_species_map`, sc)
+    .Call(`_SIndexRCFS_species_map`, sc)
 }
 
 species_remap <- function(sc, fiz) {
-    .Call(`_SIndexR_species_remap`, sc, fiz)
+    .Call(`_SIndexRCFS_species_remap`, sc, fiz)
 }
 
 sindex_ext_set_dll <- function(dll_path) {
-    .Call(`_SIndexR_sindex_ext_set_dll`, dll_path)
+    .Call(`_SIndexRCFS_sindex_ext_set_dll`, dll_path)
 }
 
 sindex_ext_clear_dll <- function() {
-    invisible(.Call(`_SIndexR_sindex_ext_clear_dll`))
+    invisible(.Call(`_SIndexRCFS_sindex_ext_clear_dll`))
 }
 
 sindex_ext_is_loaded <- function() {
-    .Call(`_SIndexR_sindex_ext_is_loaded`)
+    .Call(`_SIndexRCFS_sindex_ext_is_loaded`)
 }
 
 sindex_ext_dll_path <- function() {
-    .Call(`_SIndexR_sindex_ext_dll_path`)
+    .Call(`_SIndexRCFS_sindex_ext_dll_path`)
 }
 
 sindex_ext_ht2si <- function(curve_index, age, age_type, height, est_type) {
-    .Call(`_SIndexR_sindex_ext_ht2si`, curve_index, age, age_type, height, est_type)
+    .Call(`_SIndexRCFS_sindex_ext_ht2si`, curve_index, age, age_type, height, est_type)
 }
 
 sindex_ext_si2ht <- function(curve_index, age, age_type, site_index, y2bh) {
-    .Call(`_SIndexR_sindex_ext_si2ht`, curve_index, age, age_type, site_index, y2bh)
+    .Call(`_SIndexRCFS_sindex_ext_si2ht`, curve_index, age, age_type, site_index, y2bh)
 }
 
 sindex_ext_y2bh <- function(curve_index, site_index) {
-    .Call(`_SIndexR_sindex_ext_y2bh`, curve_index, site_index)
+    .Call(`_SIndexRCFS_sindex_ext_y2bh`, curve_index, site_index)
 }
 
 sindex_ext_sc2si <- function(species_index, site_class, fiz) {
-    .Call(`_SIndexR_sindex_ext_sc2si`, species_index, site_class, fiz)
+    .Call(`_SIndexRCFS_sindex_ext_sc2si`, species_index, site_class, fiz)
 }
 

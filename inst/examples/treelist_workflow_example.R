@@ -1,9 +1,9 @@
-library(SIndexR)
+library(SIndexRCFS)
 
 # Example: Treelist preparation for growth and yield input.
 # Goal: derive stand-level SI from dominant age/height, then attach y2bh and projection height.
-stands_path <- system.file("examples", "stand_inputs_sample.csv", package = "SIndexR")
-trees_path <- system.file("examples", "treelist_sample.csv", package = "SIndexR")
+stands_path <- system.file("examples", "stand_inputs_sample.csv", package = "SIndexRCFS")
+trees_path <- system.file("examples", "treelist_sample.csv", package = "SIndexRCFS")
 
 stands <- read.csv(stands_path, stringsAsFactors = FALSE)
 trees <- read.csv(trees_path, stringsAsFactors = FALSE)
@@ -37,3 +37,4 @@ print(stands)
 
 cat("\nTreelist with productivity fields attached:\n")
 print(model_treelist)
+

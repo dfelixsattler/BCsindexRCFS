@@ -1,8 +1,8 @@
-library(SIndexR)
+library(SIndexRCFS)
 
 # Example: Permanent Sample Plot (PSP) workflow.
 # Goal: estimate site index and years-to-breast-height from observed dominant age/height.
-psp_path <- system.file("examples", "psp_sample.csv", package = "SIndexR")
+psp_path <- system.file("examples", "psp_sample.csv", package = "SIndexRCFS")
 psp <- read.csv(psp_path, stringsAsFactors = FALSE)
 
 psp$site_index_m <- mapply(
@@ -27,3 +27,4 @@ plot_summary <- aggregate(
   FUN = mean
 )
 print(plot_summary)
+

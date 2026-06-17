@@ -1,4 +1,4 @@
-#' @useDynLib SIndexR, .registration=TRUE
+#' @useDynLib SIndexRCFS, .registration=TRUE
 #' @importFrom Rcpp evalCpp
 #' @importFrom stats aggregate optimize sd
 #' @importFrom utils read.csv write.csv
@@ -21,3 +21,4 @@ sindex_warn_legacy_once <- function(old_name, new_name) {
 	}
 	invisible(NULL)
 }
+

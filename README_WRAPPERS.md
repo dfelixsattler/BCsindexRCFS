@@ -1,38 +1,54 @@
-# SIndexR Wrapper Examples
+# SIndexRCFS Wrapper Examples
 
-This document provides quick examples for the convenience wrapper functions added to `SIndexR`.
+This guide summarizes the modern convenience wrappers in `SIndexRCFS` and
+how they fit into common forestry analysis workflows.
 
-For legacy-to-modern mappings and a modernization matrix for still-active interfaces, see
-`vignette("legacy-interfaces")`.
-
-Usage (in R):
+## Core wrapper usage
 
 ```r
-library(SIndexR)
+library(SIndexRCFS)
 
-# Convert height to site index
-HT2SI(1, 50, 1, 30, 0)
+# Height -> Site index
+HT2SI(age = 50, age_type = 1, height = 30, species = "SW")
 
-# Convert site index to height
-SI2HT(1, 50, 1, 30)
+# Site index -> Height
+SI2HT(iage = 50, age_type = 1, site_index = 30, species = "SW")
 
-# Convert site index to age
-SI2AGE(1, 30, 1, 30)
+# Site index -> Age
+SI2AGE(site_height = 30, age_type = 1, site_index = 30, species = "SW")
 
-# Compute breast-height age from site index and y
-SIY2BH(1, 30)
+# Site index -> Years to breast height
+SIY2BH(site_index = 30, species = "SW")
+
+# Site index conversion between species
+SI2SI("BA", 20, "HWC")
 ```
 
-Run the example scripts included in the package:
+## Metadata helpers
+
+```r
+# Available curves and defaults for a species
+CurveOptions("SW")
+PrintCurveOptions("SW")
+
+# Modern metadata aliases
+DefaultCurve("SW")
+SpeciesCode("SW")
+SpeciesName("SW")
+```
+
+## Run packaged examples
 
 ```sh
-Rscript -e "library(SIndexR); source(system.file('examples','wrappers_example.R', package='SIndexR'))"
-Rscript -e "library(SIndexR); source(system.file('examples','psp_workflow_example.R', package='SIndexR'))"
-Rscript -e "library(SIndexR); source(system.file('examples','treelist_workflow_example.R', package='SIndexR'))"
+Rscript -e "library(SIndexRCFS); source(system.file('examples','wrappers_example.R', package='SIndexRCFS'))"
+Rscript -e "library(SIndexRCFS); source(system.file('examples','psp_workflow_example.R', package='SIndexRCFS'))"
+Rscript -e "library(SIndexRCFS); source(system.file('examples','treelist_workflow_example.R', package='SIndexRCFS'))"
 ```
 
-For full narrative workflow examples, see:
+## Additional documentation
 
 ```r
-vignette("workflow-integration", package = "SIndexR")
+vignette("workflow-integration", package = "SIndexRCFS")
+vignette("legacy-interfaces", package = "SIndexRCFS")
 ```
+

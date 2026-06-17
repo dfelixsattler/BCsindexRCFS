@@ -1,4 +1,5 @@
 library(testthat)
-library(SIndexR)
+library(SIndexRCFS)
 
-test_check("SIndexR")
+test_check("SIndexRCFS")
+

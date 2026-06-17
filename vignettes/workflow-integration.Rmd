@@ -1,16 +1,16 @@
 ---
-title: "SIndexR Workflow Integration Examples"
-author: "SIndexR Contributors"
+title: "SIndexRCFS Workflow Integration Examples"
+author: "SIndexRCFS Contributors"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{SIndexR Workflow Integration Examples}
+  %\VignetteIndexEntry{SIndexRCFS Workflow Integration Examples}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(SIndexR)
+library(SIndexRCFS)
 ```
 
 ## Overview
@@ -28,7 +28,7 @@ Typical PSP programs maintain dominant height and age observations by plot and m
 Using those fields, SIndexR can derive site index and years to breast height.
 
 ```{r psp-load}
-psp_path <- system.file("examples", "psp_sample.csv", package = "SIndexR")
+psp_path <- system.file("examples", "psp_sample.csv", package = "SIndexRCFS")
 psp <- read.csv(psp_path, stringsAsFactors = FALSE)
 psp
 ```
@@ -68,8 +68,8 @@ A common workflow is to estimate stand-level productivity from dominant age/heig
 then attach those attributes to each tree record used by a growth model.
 
 ```{r treelist-load}
-stands_path <- system.file("examples", "stand_inputs_sample.csv", package = "SIndexR")
-trees_path <- system.file("examples", "treelist_sample.csv", package = "SIndexR")
+stands_path <- system.file("examples", "stand_inputs_sample.csv", package = "SIndexRCFS")
+trees_path <- system.file("examples", "treelist_sample.csv", package = "SIndexRCFS")
 
 stands <- read.csv(stands_path, stringsAsFactors = FALSE)
 trees <- read.csv(trees_path, stringsAsFactors = FALSE)
@@ -119,6 +119,7 @@ model_treelist
 You can run the equivalent script versions directly:
 
 ```r
-source(system.file("examples", "psp_workflow_example.R", package = "SIndexR"))
-source(system.file("examples", "treelist_workflow_example.R", package = "SIndexR"))
+source(system.file("examples", "psp_workflow_example.R", package = "SIndexRCFS"))
+source(system.file("examples", "treelist_workflow_example.R", package = "SIndexRCFS"))
 ```
+

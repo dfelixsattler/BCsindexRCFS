@@ -1,54 +1,84 @@
-# SIndexR
-The package is developed to implement key functions in Sitetools in R environment. The package is still in development and has not been fully tested and should be used with caution for now.
+# SIndexRCFS
 
-Warning: the functions in this package MAY NOT represent the most recent functions in SiteTools. Currently, those functions are from version 1.52.
+SIndexRCFS is a modernized fork of the original SIndexR package for running
+Site index calculations in R, with a focus on practical forestry workflows.
 
-## Project status
-The project is still under development.
+## Project goals
 
-## To install the package
-library(devtools)
-install_github("bcgov/SIndexR")
+SIndexRCFS keeps compatibility with legacy SIndexR interfaces while adding a
+cleaner modern wrapper layer that is easier to use in applied analysis and
+data pipelines.
 
-## Workflow integration examples
-The package now includes practical workflow examples using generic datasets:
+## Acknowledgements
 
-- Permanent Sample Plot (PSP) style productivity estimation
-- Treelist preparation for growth and yield model inputs
+- Yong Luo, original author of the SIndexR R package.
+- Ken Polsson, original author/maintainer of the underlying Sindex C code.
 
-Run the scripts directly:
+## What has changed in this fork
+
+- Added modern wrapper interfaces for core conversions (`HT2SI`, `SI2HT`,
+    `SI2AGE`, `SI2SI`, `SC2SI`, `SIY2BH`, `SIY2BH05`).
+- Added modern metadata aliases (`DefaultCurve`, `SpeciesCode`,
+    `SpeciesName`).
+- Added once-per-session legacy warnings for superseded conversion wrappers.
+- Added workflow examples with generic data for:
+    - Permanent Sample Plot (PSP) productivity estimation.
+    - Treelist enrichment for growth-and-yield model inputs.
+- Added migration and legacy reference documentation vignettes.
+
+## Installation
+
+Install from a local checkout:
 
 ```r
-source(system.file("examples", "psp_workflow_example.R", package = "SIndexR"))
-source(system.file("examples", "treelist_workflow_example.R", package = "SIndexR"))
+if (!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
+remotes::install_local(".", build_vignettes = TRUE)
 ```
 
-Open the full vignette:
+Or install from GitHub (replace with your repo path):
 
 ```r
-vignette("workflow-integration", package = "SIndexR")
+if (!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
+remotes::install_github("<owner>/SIndexRCFS", build_vignettes = TRUE)
 ```
 
-## To get help or report an Issue
-Please file an [issue](https://github.com/bcgov/SIndexR/issues/).
+## Quick start
 
-## To contribute
-If you would like to contribute to the package, please see our [CONTRIBUTING](https://github.com/bcgov/SIndexR/blob/master/CONTRIBUTING.md) guidelines.
+```r
+library(SIndexRCFS)
 
-Please note that this project is released with a [Contributor Code of Conduct](https://github.com/bcgov/SIndexR/blob/master/CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+# Height -> Site index
+HT2SI(age = 50, age_type = 1, height = 30, species = "SW")
 
-## C Source codes
-The source datasets used in this package come from Ken Polsson, the maintainer and developer of Sindex.
+# Site index -> Height
+SI2HT(iage = 50, age_type = 1, site_index = 30, species = "SW")
 
-## Licence
-    # Copyright 2018 Province of British Columbia
-    # 
-    # Licensed under the Apache License, Version 2.0 (the "License");
-    # you may not use this file except in compliance with the License.
-    # You may obtain a copy of the License at
-    # 
-    # http://www.apache.org/licenses/LICENSE-2.0
-    # 
-    # Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
-    # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    # See the License for the specific language governing permissions and limitations under the License.
+# Site index -> Age
+SI2AGE(site_height = 30, age_type = 1, site_index = 30, species = "SW")
+```
+
+## Workflow examples
+
+Run the packaged scripts:
+
+```r
+source(system.file("examples", "psp_workflow_example.R", package = "SIndexRCFS"))
+source(system.file("examples", "treelist_workflow_example.R", package = "SIndexRCFS"))
+```
+
+Open the vignettes:
+
+```r
+vignette("workflow-integration", package = "SIndexRCFS")
+vignette("legacy-interfaces", package = "SIndexRCFS")
+```
+
+## Support and contribution
+
+Please file issues and contributions in this fork repository. See
+`CONTRIBUTING.md` and `CODE_OF_CONDUCT.md`.
+
+## License
+
+Apache License 2.0. See `LICENSE`.
+

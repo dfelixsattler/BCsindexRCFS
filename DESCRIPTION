@@ -1,11 +1,18 @@
-Package: SIndexR
+Package: SIndexRCFS
 Type: Package
-Title: Sindex in R
-Version: 0.1.0
-Date: 2018-01-30
-Author: Yong Luo
-Maintainer: Yong Luo <yong.luo@gov.bc.ca>
-Description: This package contains key functions in SiteTools.
+Title: Site Index Tools in R for PSP and Growth Workflows
+Version: 0.2.0
+Date: 2026-06-17
+Authors@R: c(
+  person("Derek Felix", "Sattler", email = "derekfelixsattler@gmail.com", role = c("aut", "cre")),
+  person("Yong", "Luo", role = "ctb", comment = "Original SIndexR package author"),
+  person("Ken", "Polsson", role = "ctb", comment = "Original Sindex C implementation")
+ )
+Description: A modernized fork of the original SIndexR package that exposes
+  site index routines for practical forestry workflows in R. This package
+  adds consistent wrapper APIs, external DLL backend support, legacy
+  compatibility guidance, and end-to-end examples for Permanent Sample Plot
+  (PSP) and growth-and-yield treelist preparation.
 License: Apache License (== 2.0) | file LICENSE
 Encoding: UTF-8
 LazyData: true
