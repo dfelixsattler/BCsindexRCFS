@@ -142,6 +142,57 @@ PrintCurveOptions <- function(species, fiz = NULL) {
   invisible(opts)
 }
 
+#' Get default curve index for species
+#'
+#' Modern alias for `SIndexR_DefCurve()` that accepts species codes
+#' and optional FIZ remapping.
+#'
+#' @param species integer/numeric species index or species code (e.g. "SW", "FDI")
+#' @param fiz optional FIZ code used when remapping species codes
+#' @return integer default curve index (vectorized)
+#' @examples
+#' DefaultCurve("SW")
+#' DefaultCurve(c("SW", "FDI"))
+#' @export
+DefaultCurve <- function(species, fiz = NULL) {
+  sp_index <- SIndexR_SpeciesIndex(species, fiz = fiz)
+  SIndexR_DefCurve(sp_index)
+}
+
+#' Get canonical species code
+#'
+#' Modern alias for `SIndexR_SpecCode()` that accepts species codes
+#' or species indices and returns canonical species codes.
+#'
+#' @param species integer/numeric species index or species code (e.g. "SW", "FDI")
+#' @param fiz optional FIZ code used when remapping species codes
+#' @return character canonical species code (vectorized)
+#' @examples
+#' SpeciesCode("SW")
+#' SpeciesCode(c(11, 48))
+#' @export
+SpeciesCode <- function(species, fiz = NULL) {
+  sp_index <- SIndexR_SpeciesIndex(species, fiz = fiz)
+  SIndexR_SpecCode(sp_index)
+}
+
+#' Get species full name
+#'
+#' Modern alias for `SIndexR_SpecName()` that accepts species codes
+#' or species indices and returns full species names.
+#'
+#' @param species integer/numeric species index or species code (e.g. "SW", "FDI")
+#' @param fiz optional FIZ code used when remapping species codes
+#' @return character full species name (vectorized)
+#' @examples
+#' SpeciesName("SW")
+#' SpeciesName(c(11, 48))
+#' @export
+SpeciesName <- function(species, fiz = NULL) {
+  sp_index <- SIndexR_SpeciesIndex(species, fiz = fiz)
+  SIndexR_SpecName(sp_index)
+}
+
 # Height -> Site Index
 #' Convert height to site index
 #'

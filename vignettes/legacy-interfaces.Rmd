@@ -145,6 +145,46 @@ This warning appears only once per session to avoid cluttering output.
 3. **Simplify return handling**: Modern functions return numeric values directly, eliminating the need to extract from a list.
 4. **Enable external DLL support**: Modern wrappers automatically use external SIndex DLLs if configured via `SIndexR_SetExternalDll()`.
 
+## Modernization Matrix for Still-Active Interfaces
+
+The functions below are not currently superseded conversion wrappers. They remain active and useful, but can be modernized additively for API consistency.
+
+Recommended action categories:
+
+- **Keep**: leave behavior and naming unchanged.
+- **Add modern alias**: introduce a new wrapper name/shape while retaining the original.
+- **Arguments-only modernization**: keep function purpose but align argument names and defaults.
+
+| Existing Function | Role | Recommendation | Modernization Value | Notes |
+|-------------------|------|----------------|---------------------|-------|
+| `SIndexR_CurveName` | Curve metadata lookup | Keep | Low | Stable utility; clear single-purpose behavior |
+| `SIndexR_CurveNotes` | Curve metadata lookup | Keep | Low | Stable utility; mostly informational text |
+| `SIndexR_CurveSource` | Curve metadata lookup | Keep | Low | Stable utility; consistent with metadata family |
+| `SIndexR_CurveToSpecies` | Curve-to-species mapping | Add modern alias | Medium | Candidate alias: `CurveSpecies()` returning typed vector |
+| `SIndexR_CurveUse` | Curve usage flag/metadata | Keep | Low | Keep as compatibility helper unless usage friction appears |
+| `SIndexR_DefCurve` | Default curve for species | Add modern alias | High | Candidate alias: `DefaultCurve()` with species-code input |
+| `SIndexR_DefCurveEst` | Default curve estimation mode | Keep | Low | Specialized, low-frequency helper |
+| `SIndexR_DefGICurve` | Default GI curve lookup | Keep | Low | Specialized; modernizing can wait |
+| `SIndexR_FirstSpecies` | Species iteration start | Add modern alias | Medium | Candidate alias: `SpeciesFirst()` for readability |
+| `SIndexR_NextSpecies` | Species iteration step | Add modern alias | Medium | Candidate alias: `SpeciesNext()` and iterator-style docs |
+| `SIndexR_SpecCode` | Species index to code | Add modern alias | High | Candidate alias: `SpeciesCode()` with vectorized behavior |
+| `SIndexR_SpecName` | Species index to full name | Add modern alias | High | Candidate alias: `SpeciesName()` with vectorized behavior |
+| `SIndexR_SpecUse` | Species usage flag/metadata | Keep | Medium | Keep for now; modernize only if semantics need clarification |
+| `SIndexR_VersionNumber` | Core SIndex version | Add modern alias | Medium | Candidate alias: `SIndexVersion()` for discoverability |
+
+### Suggested Rollout Order
+
+1. **High value aliases first**: `SIndexR_DefCurve`, `SIndexR_SpecCode`, `SIndexR_SpecName`.
+2. **Navigation aliases next**: `SIndexR_FirstSpecies`, `SIndexR_NextSpecies`, `SIndexR_VersionNumber`.
+3. **Keep specialized metadata functions unchanged** until concrete user friction appears.
+
+### Implementation Guardrails
+
+1. Add modern wrappers as pure delegates first (no behavioral change).
+2. Keep legacy functions exported and documented as compatibility interfaces.
+3. Add equivalence tests for old/new pairs before any deprecation warnings.
+4. Use once-per-session warnings only after the new interfaces are proven stable.
+
 ## Backward Compatibility
 
 All legacy functions remain available and functional. Code using legacy interfaces will continue to work without modification. However, new code should prefer the modern wrappers for better usability and future enhancements.

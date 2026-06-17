@@ -2,6 +2,9 @@
 
 This document provides quick examples for the convenience wrapper functions added to `SIndexR`.
 
+For legacy-to-modern mappings and a modernization matrix for still-active interfaces, see
+`vignette("legacy-interfaces")`.
+
 Usage (in R):
 
 ```r

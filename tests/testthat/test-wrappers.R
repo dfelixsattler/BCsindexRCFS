@@ -53,6 +53,30 @@ test_that("compact curve menu printer returns options invisibly", {
   expect_true(any(grepl("\\*", out)))
 })
 
+test_that("DefaultCurve matches legacy SIndexR_DefCurve", {
+  sp_sw <- SIndexR_SpeciesIndex("SW")
+  expect_equal(DefaultCurve("SW"), SIndexR_DefCurve(sp_sw))
+
+  sp_vec <- SIndexR_SpeciesIndex(c("SW", "FDI"))
+  expect_equal(DefaultCurve(c("SW", "FDI")), SIndexR_DefCurve(sp_vec))
+})
+
+test_that("SpeciesCode matches legacy SIndexR_SpecCode", {
+  sp_sw <- SIndexR_SpeciesIndex("SW")
+  expect_equal(SpeciesCode("SW"), SIndexR_SpecCode(sp_sw))
+
+  sp_vec <- SIndexR_SpeciesIndex(c("SW", "FDI"))
+  expect_equal(SpeciesCode(c("SW", "FDI")), SIndexR_SpecCode(sp_vec))
+})
+
+test_that("SpeciesName matches legacy SIndexR_SpecName", {
+  sp_sw <- SIndexR_SpeciesIndex("SW")
+  expect_equal(SpeciesName("SW"), SIndexR_SpecName(sp_sw))
+
+  sp_vec <- SIndexR_SpeciesIndex(c("SW", "FDI"))
+  expect_equal(SpeciesName(c("SW", "FDI")), SIndexR_SpecName(sp_vec))
+})
+
 test_that("Age2Age converts age types", {
   res <- Age2Age(cu_index = 112, age1 = 50, age1_type = 1, age2_type = 0, y2bh = 2)
   expect_true(is.numeric(res))
