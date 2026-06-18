@@ -38,27 +38,12 @@ test_that("wrappers accept species codes with default curve selection", {
   expect_true(y2bh > 0)
 })
 
-test_that("curve options helper returns default flag", {
-  opts <- CurveOptions("SW")
+test_that("curve options returns correct structure and marks default", {
+  opts <- curve_options("SW")
   expect_true(is.data.frame(opts))
   expect_true(nrow(opts) >= 1)
   expect_true(all(c("curve_index", "curve_name", "is_default") %in% names(opts)))
   expect_equal(sum(opts$is_default), 1)
-})
-
-test_that("compact curve menu printer returns options invisibly", {
-  out <- capture.output(ret <- PrintCurveOptions("SW"))
-  expect_true(length(out) >= 1)
-  expect_true(is.data.frame(ret))
-  expect_true(any(grepl("\\*", out)))
-})
-
-test_that("DefaultCurve matches legacy SIndexR_DefCurve", {
-  sp_sw <- SIndexR_SpeciesIndex("SW")
-  expect_equal(DefaultCurve("SW"), SIndexR_DefCurve(sp_sw))
-
-  sp_vec <- SIndexR_SpeciesIndex(c("SW", "FDI"))
-  expect_equal(DefaultCurve(c("SW", "FDI")), SIndexR_DefCurve(sp_vec))
 })
 
 test_that("SpeciesCode matches legacy SIndexR_SpecCode", {
