@@ -90,7 +90,7 @@ stands$y2bh_years <- mapply(
 )
 
 stands$proj_height_m <- mapply(
-  function(sp, age, si, y2bh) si_to_ht(iage = age, age_type = 1, site_index = si, y2bh = y2bh, species = sp),
+  function(sp, age, si, y2bh) si_age_to_ht(iage = age, age_type = 1, site_index = si, y2bh = y2bh, species = sp),
   stands$dom_species, stands$projection_age, stands$site_index_m, stands$y2bh_years
 )
 
