@@ -62,6 +62,7 @@ resolve_curve_index <- function(cu_index = NULL, species = NULL, curve = "defaul
 #' List available curves for a species
 #'
 #' Returns available curve indices and names for a species, and marks the default curve.
+#' Note: `CurveOptions()` is a legacy alias for this function (still available for compatibility).
 #'
 #' @param species integer or character species index/code
 #' @param fiz optional FIZ code when remapping species codes
@@ -104,72 +105,24 @@ curve_options <- function(species, fiz = NULL) {
 }
 
 #' @rdname curve_options
-#' @export
 CurveOptions <- function(species, fiz = NULL) {
   sindex_warn_legacy_once("CurveOptions", "curve_options")
   curve_options(species = species, fiz = fiz)
 }
 
-#' Print a compact curve menu for a species
-#'
-#' Prints available curves in a concise table and marks the default curve with `*`.
-#'
-#' @param species integer or character species index/code
-#' @param fiz optional FIZ code when remapping species codes
-#' @return invisibly returns the same value as `curve_options()`
-#' @examples
-#' PrintCurveOptions("SW")
-PrintCurveOptions <- function(species, fiz = NULL) {
-  sindex_warn_legacy_once("PrintCurveOptions", "curve_options")
-  opts <- curve_options(species, fiz)
-
-  print_one <- function(df, label) {
-    cat("Species", label, "\n")
-    if (nrow(df) == 0) {
-      cat("  (no curves available)\n")
-      return(invisible(NULL))
-    }
-
-    markers <- ifelse(df$is_default, "*", " ")
-    for (i in seq_len(nrow(df))) {
-      cat(sprintf("%s %3d  %s\n", markers[i], df$curve_index[i], df$curve_name[i]))
-    }
-    cat("\n")
-    invisible(NULL)
-  }
-
-  if (is.data.frame(opts)) {
-    sp_idx <- SIndexR_SpeciesIndex(species, fiz = fiz)
-    print_one(opts, sp_idx[1])
-    return(invisible(opts))
-  }
-
-  for (nm in names(opts)) {
-    print_one(opts[[nm]], nm)
-  }
-  invisible(opts)
-}
-
 #' Get default curve index for species
 #'
-#' Modern alias for `SIndexR_DefCurve()` that accepts species codes
-#' and optional FIZ remapping.
+#' Internal helper for `SIndexR_DefCurve()` that accepts species codes.
+#' Not exported; use curve_options() instead.
 #'
 #' @param species integer/numeric species index or species code (e.g. "SW", "FDI")
 #' @param fiz optional FIZ code used when remapping species codes
 #' @return integer default curve index (vectorized)
-#' @examples
-#' DefaultCurve("SW")
-#' DefaultCurve(c("SW", "FDI"))
-#' @export
+#' @keywords internal
 DefaultCurve <- function(species, fiz = NULL) {
   sp_index <- SIndexR_SpeciesIndex(species, fiz = fiz)
   SIndexR_DefCurve(sp_index)
 }
-
-#' @rdname DefaultCurve
-#' @export
-default_curve <- function(...) DefaultCurve(...)
 
 #' Get canonical species code
 #'
@@ -180,17 +133,16 @@ default_curve <- function(...) DefaultCurve(...)
 #' @param fiz optional FIZ code used when remapping species codes
 #' @return character canonical species code (vectorized)
 #' @examples
-#' SpeciesCode("SW")
-#' SpeciesCode(c(11, 48))
+#' species_code("SW")
+#' species_code(c(11, 48))
 #' @export
-SpeciesCode <- function(species, fiz = NULL) {
+species_code <- function(species, fiz = NULL) {
   sp_index <- SIndexR_SpeciesIndex(species, fiz = fiz)
   SIndexR_SpecCode(sp_index)
 }
 
-#' @rdname SpeciesCode
-#' @export
-species_code <- function(...) SpeciesCode(...)
+#' @rdname species_code
+SpeciesCode <- function(...) species_code(...)
 
 #' Get species full name
 #'
@@ -201,22 +153,22 @@ species_code <- function(...) SpeciesCode(...)
 #' @param fiz optional FIZ code used when remapping species codes
 #' @return character full species name (vectorized)
 #' @examples
-#' SpeciesName("SW")
-#' SpeciesName(c(11, 48))
+#' species_name("SW")
+#' species_name(c(11, 48))
 #' @export
-SpeciesName <- function(species, fiz = NULL) {
+species_name <- function(species, fiz = NULL) {
   sp_index <- SIndexR_SpeciesIndex(species, fiz = fiz)
   SIndexR_SpecName(sp_index)
 }
 
-#' @rdname SpeciesName
-#' @export
-species_name <- function(...) SpeciesName(...)
+#' @rdname species_name
+SpeciesName <- function(...) species_name(...)
 
 # Height + age -> Site Index
 #' Convert height and age to site index
 #'
 #' A thin wrapper around the internal `height_to_index` routine.
+#' Note: `HT2SI()` is a legacy alias for this function (still available for compatibility).
 #'
 #' @param cu_index numeric or integer, explicit curve index
 #' @param age numeric, age of the tree
@@ -238,13 +190,13 @@ ht_age_to_si <- function(cu_index = NULL, age, age_type = 1, height, si_est_type
 }
 
 #' @rdname ht_age_to_si
-#' @export
 HT2SI <- function(...) ht_age_to_si(...)
 
-#' Convert site index to height
+#' Convert site index and age to height
 #'
-#' Wrapper around `index_to_height`. If `y2bh` is not provided it will be
-#' estimated via `si_y2bh`.
+#' Given site index and age, computes tree height. Age can be given as total age or breast height age.
+#' Site index must be based on breast height age 50. Where breast height age is less than 0,
+#' a quadratic function is used. If `y2bh` is not provided it will be estimated via `si_y2bh`.
 #'
 #' @param cu_index numeric or integer, explicit curve index
 #' @param iage numeric, age to convert
@@ -257,19 +209,18 @@ HT2SI <- function(...) ht_age_to_si(...)
 #' @param fiz optional FIZ code used when remapping species codes
 #' @return numeric height
 #' @examples
-#' si_to_ht(1, 50, 1, 30)
-#' si_to_ht(iage = 50, site_index = 30, species = "SW")
+#' si_age_to_ht(1, 50, 1, 30)
+#' si_age_to_ht(iage = 50, site_index = 30, species = "SW")
 #' @export
-si_to_ht <- function(cu_index = NULL, iage, age_type = 1, site_index, y2bh = NA_real_, pi = 0.5,
-                     species = NULL, curve = "default", fiz = NULL) {
+si_age_to_ht <- function(cu_index = NULL, iage, age_type = 1, site_index, y2bh = NA_real_, pi = 0.5,
+                         species = NULL, curve = "default", fiz = NULL) {
   cu_index <- resolve_curve_index(cu_index = cu_index, species = species, curve = curve, fiz = fiz)
   if (is.na(y2bh)) y2bh <- sindex_y2bh(as.integer(cu_index), as.numeric(site_index))
   sindex_index_to_height(as.integer(cu_index), as.numeric(iage), as.integer(age_type), as.numeric(site_index), as.numeric(y2bh), as.numeric(pi))
 }
 
-#' @rdname si_to_ht
-#' @export
-SI2HT <- function(...) si_to_ht(...)
+#' @rdname si_age_to_ht
+SI2HT <- function(...) si_age_to_ht(...)
 
 #' Convert site index and height to age
 #'
@@ -297,7 +248,6 @@ si_ht_to_age <- function(cu_index = NULL, site_height, age_type = 1, site_index,
 }
 
 #' @rdname si_ht_to_age
-#' @export
 SI2AGE <- function(...) si_ht_to_age(...)
 
 #' Years to breast height (y2bh)
@@ -360,6 +310,7 @@ Y2BH05 <- function(...) SIY2BH05(...)
 #' Convert age between type-at-breast and type-at-total
 #'
 #' Converts age from one age type (breast height or total) to another.
+#' Note: `Age2Age()` and `AgeToAge()` are legacy aliases for this function (still available for compatibility).
 #'
 #' @param cu_index numeric or integer, explicit curve index
 #' @param age1 numeric, initial age value
@@ -393,27 +344,25 @@ Age2Age <- function(...) age_to_age(...)
 #' @rdname age_to_age
 AgeToAge <- function(...) age_to_age(...)
 
-#' @rdname curve_options
-print_curve_options <- function(species, fiz = NULL) {
-  PrintCurveOptions(species = species, fiz = fiz)
-}
-
-#' @rdname SIndexR_CurveName
-#' @export
-curve_name <- function(cu_index) {
-  SIndexR_CurveName(cu_index)
-}
-
 #' @rdname SIndexR_CurveNotes
 #' @export
-curve_notes <- function(cu_index) {
-  SIndexR_CurveNotes(cu_index)
+curve_notes <- function(cu_index = NULL, species = NULL, curve = "default", fiz = NULL) {
+  if (!is.null(cu_index)) {
+    return(SIndexR_CurveNotes(cu_index))
+  }
+  if (!is.null(species)) {
+    cu_index <- resolve_curve_index(cu_index = cu_index, species = species, curve = curve, fiz = fiz)
+    return(SIndexR_CurveNotes(cu_index))
+  }
+  stop("Provide either cu_index or species.")
 }
 
 #' Convert site class to site index
 #'
 #' Translates site class code (G/M/P/L) to estimated site index (height in metres).
 #' Used where total age is small (under 30 years), where site index based on height may not be reliable.
+#' For details on site class definitions, see the SiteTools documentation:
+#' https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/forestry/silviculture/training-modules/sicourse.pdf
 #'
 #' @param species integer/numeric species index or species code (e.g. "SW", "FDI")
 #' @param site_class character, one of "G" (good), "M" (medium), "P" (poor), "L" (low)
@@ -421,8 +370,8 @@ curve_notes <- function(cu_index) {
 #' @param ... additional arguments passed through compatibility aliases
 #' @return numeric site index (height in metres)
 #' @examples
-#' SC2SI("FDI", "M")
-#' SC2SI(11, "P", "H")
+#' site_class_to_index("FDI", "M")
+#' site_class_to_index(11, "P", "H")
 #' @export
 SC2SI <- function(species, site_class, fiz = NULL) {
   sp_index <- SIndexR_SpeciesIndex(species, fiz = fiz)
@@ -447,7 +396,6 @@ SC2SI <- function(species, site_class, fiz = NULL) {
 }
 
 #' @rdname SC2SI
-#' @export
 SiteClassToIndex <- function(...) SC2SI(...)
 
 #' @rdname SC2SI
