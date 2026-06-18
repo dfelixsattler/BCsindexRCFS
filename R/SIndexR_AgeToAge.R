@@ -11,22 +11,8 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 
-#' Legacy alias for age_to_age
-#'
-#' `SIndexR_AgeToAge()` is kept for backward compatibility.
-#' Prefer using `age_to_age()` for new code.
-#'
-#' @param cu_index numeric or integer, explicit curve index
-#' @param age1 numeric, initial age value
-#' @param age1_type integer, initial age type (1 for breast height, 0 for total)
-#' @param age2_type integer, target age type (1 for breast height, 0 for total)
-#' @param y2bh numeric, years to breast height (typically estimated automatically)
-#' @param species integer/numeric species index or species code (e.g. "SW", "FDI")
-#' @param curve curve selector when species is provided: "default", "first", numeric curve index, or curve name
-#' @param fiz optional FIZ code used when remapping species codes
-#' @return numeric converted age
-#' @rdname age_to_age
 #' @export
+#' @noRd
 SIndexR_AgeToAge <- function(cu_index = NULL, age1, age1_type, age2_type, y2bh = NA_real_,
                                            species = NULL, curve = "default", fiz = NULL) {
    age_to_age(

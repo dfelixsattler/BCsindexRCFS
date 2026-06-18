@@ -2,15 +2,9 @@
 % Please edit documentation in R/wrappers.R
 \name{curve_options}
 \alias{curve_options}
-\alias{CurveOptions}
-\alias{print_curve_options}
 \title{List available curves for a species}
 \usage{
 curve_options(species, fiz = NULL)
-
-CurveOptions(species, fiz = NULL)
-
-print_curve_options(species, fiz = NULL)
 }
 \arguments{
 \item{species}{integer or character species index/code}

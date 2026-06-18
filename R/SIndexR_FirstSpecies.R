@@ -13,7 +13,10 @@
 #' @title
 #' First species defined in Sindex
 #' @description
-#' Returns a species index for the first species defined in Sindex
+#' Returns a species index for the first species defined in Sindex.
+#' This is mainly an iterator helper used with `SIndexR_NextSpecies()` to
+#' traverse all species defined in the library.
+#' Most user code should prefer passing explicit species codes (e.g. "FDC", "SW").
 #' @return
 #' Integer species index, for use in other Sindex functions.
 #' @note

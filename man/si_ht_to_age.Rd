@@ -2,8 +2,7 @@
 % Please edit documentation in R/wrappers.R
 \name{si_ht_to_age}
 \alias{si_ht_to_age}
-\alias{SI2AGE}
-\title{Convert site index and height to age}
+\title{Calculate age given site index and height}
 \usage{
 si_ht_to_age(
   cu_index = NULL,
@@ -15,8 +14,6 @@ si_ht_to_age(
   curve = "default",
   fiz = NULL
 )
-
-SI2AGE(...)
 }
 \arguments{
 \item{cu_index}{numeric or integer, explicit curve index}

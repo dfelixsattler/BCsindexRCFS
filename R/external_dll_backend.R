@@ -9,10 +9,10 @@
 #' @return logical TRUE if loaded successfully
 #' @examples
 #' \dontrun{
-#' SIndexR_SetExternalDll("C:/sindex64.dll")
+#' set_external_dll("C:/sindex64.dll")
 #' }
 #' @export
-SIndexR_SetExternalDll <- function(dll_path) {
+set_external_dll <- function(dll_path) {
   if (!is.character(dll_path) || length(dll_path) != 1) {
     stop("dll_path must be a single character path.")
   }
@@ -27,16 +27,24 @@ SIndexR_SetExternalDll <- function(dll_path) {
   TRUE
 }
 
+#' @export
+#' @noRd
+SIndexR_SetExternalDll <- function(...) set_external_dll(...)
+
 #' External DLL backend status
 #'
 #' @return list with `loaded` and `dll_path`
 #' @export
-SIndexR_ExternalDllInfo <- function() {
+external_dll_info <- function() {
   list(
     loaded = isTRUE(sindex_ext_is_loaded()),
     dll_path = sindex_ext_dll_path()
   )
 }
+
+#' @export
+#' @noRd
+SIndexR_ExternalDllInfo <- function() external_dll_info()
 
 sindex_use_external <- function() {
   isTRUE(sindex_ext_is_loaded())

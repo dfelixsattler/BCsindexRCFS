@@ -20,6 +20,9 @@ Integer curve index, for use in other Sindex functions.
 }
 \description{
 Returns first defined curve index for a species.
+This is mainly an iterator helper used with `SIndexR_NextCurve()` to
+traverse all curves for a species in sequence.
+Most user code should prefer `curve_options()` for a tabular view.
 }
 \note{
 No assumption should be made about the ordering of the curves.
