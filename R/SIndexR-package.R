@@ -7,7 +7,7 @@
 #'   The SiteTools external DLL backend used by this package is published by
 #'   the Government of British Columbia and is available at:
 #'   https://www2.gov.bc.ca/gov/content/industry/forestry/managing-our-forest-resources/forest-inventory/field-forms-and-software/software-download#SiteTools
-#' @keywords internal
+#' @keywords package
 #' @seealso
 #'   See `vignette("workflow-integration", package = "BCsindexRCFS")` for
 #'   practical PSP and treelist workflow examples.
