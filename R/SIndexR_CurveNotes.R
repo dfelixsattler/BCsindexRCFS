@@ -26,7 +26,7 @@
 #' @examples
 #' SIndexR_CurveNotes(1)
 #' SIndexR_CurveNotes(species = "SW")
-#' @rdname SIndexR_CurveNotes
+#' @noRd
 #' @export
 SIndexR_CurveNotes <- function(cu_index = NULL, species = NULL, curve = "default", fiz = NULL){
   # If cu_index is provided, use it directly

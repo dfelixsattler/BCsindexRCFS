@@ -21,7 +21,7 @@
 #'    null pointer.
 #' @note
 #'    Species code string takes the form "Xx" or "Xxx", such as "Sw" or "Fdc".
-#' @rdname SIndexR_SpecCode
+#' @noRd
 SIndexR_SpecCode <- function(sp_index){
   sp_index <- wholeToInteger(sp_index, "sp_index")
   return(unlist(lapply(sp_index, function(s) Sindex_SpecCode(s))))

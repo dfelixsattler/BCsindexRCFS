@@ -142,9 +142,6 @@ species_code <- function(species, fiz = NULL) {
   SIndexR_SpecCode(sp_index)
 }
 
-#' @rdname species_code
-SpeciesCode <- function(...) species_code(...)
-
 #' Get species full name
 #'
 #' Modern alias for `SIndexR_SpecName()` that accepts species codes
@@ -162,9 +159,6 @@ species_name <- function(species, fiz = NULL) {
   SIndexR_SpecName(sp_index)
 }
 
-#' @rdname species_name
-SpeciesName <- function(...) species_name(...)
-
 # Height + age -> Site Index
 #' Calculate site index given height and age
 #'
@@ -172,9 +166,14 @@ SpeciesName <- function(...) species_name(...)
 #'
 #' @param cu_index numeric or integer, explicit curve index
 #' @param age numeric, age of the tree
-#' @param age_type integer, one of the `SI_AT_*` constants (default: `SI_AT_BREAST`)
-#' @param height numeric, tree height
-#' @param si_est_type integer, estimation type (default: `SI_EST_ITERATE`)
+#' @param age_type integer, defines age type. Must be one of: `0`, the age is the
+#'   total age of the stand in years since planting; `1`, the age indicates the
+#'   number of years since the stand reached breast height.
+#' @param height numeric, tree height in metres
+#' @param si_est_type integer, defines estimation method. Must be one of:
+#'   `0` (`SI_EST_DIRECT`), compute site index using direct equations if available,
+#'   automatically falling back to iterative if not; `1` (`SI_EST_ITERATE`),
+#'   always compute site index using the iterative convergence method.
 #' @param species integer/numeric species index or species code (e.g. "SW", "FDI")
 #' @param curve curve selector when species is provided: "default", "first", numeric curve index, or curve name
 #' @param fiz optional FIZ code used when remapping species codes
@@ -200,8 +199,10 @@ HT2SI <- function(...) ht_age_to_si(...)
 #' a quadratic function is used. If `y2bh` is not provided it will be estimated via `si_y2bh`.
 #'
 #' @param cu_index numeric or integer, explicit curve index
-#' @param iage numeric, age to convert
-#' @param age_type integer, one of the `SI_AT_*` constants
+#' @param age numeric, age to convert
+#' @param age_type integer, defines age type. Must be one of: `0`, the age is the
+#'   total age of the stand in years since planting; `1`, the age indicates the
+#'   number of years since the stand reached breast height.
 #' @param site_index numeric, site index value
 #' @param y2bh numeric, years to breast height (optional)
 #' @param pi numeric, projection index (default: 0.5)
@@ -211,23 +212,24 @@ HT2SI <- function(...) ht_age_to_si(...)
 #' @return numeric height
 #' @examples
 #' si_age_to_ht(1, 50, 1, 30)
-#' si_age_to_ht(iage = 50, site_index = 30, species = "SW")
+#' si_age_to_ht(age = 50, site_index = 30, species = "SW")
 #' @export
-si_age_to_ht <- function(cu_index = NULL, iage, age_type = 1, site_index, y2bh = NA_real_, pi = 0.5,
+si_age_to_ht <- function(cu_index = NULL, age, age_type = 1, site_index, y2bh = NA_real_, pi = 0.5,
                          species = NULL, curve = "default", fiz = NULL) {
   cu_index <- resolve_curve_index(cu_index = cu_index, species = species, curve = curve, fiz = fiz)
   if (is.na(y2bh)) y2bh <- sindex_y2bh(as.integer(cu_index), as.numeric(site_index))
-  sindex_index_to_height(as.integer(cu_index), as.numeric(iage), as.integer(age_type), as.numeric(site_index), as.numeric(y2bh), as.numeric(pi))
+  sindex_index_to_height(as.integer(cu_index), as.numeric(age), as.integer(age_type), as.numeric(site_index), as.numeric(y2bh), as.numeric(pi))
 }
 
 #' @export
 #' @noRd
 SI2HT <- function(...) si_age_to_ht(...)
 
-#' Calculate age given site index and height
+#' Calculate age given height and site index
 #'
-#' Wrapper around `index_to_age`. If `y2bh` is not provided it will be
-#' estimated via `si_y2bh`.
+#' Converts a height and site index to an age for a particular site index
+#' curve. Age can be returned as total age or breast height age.
+#' If `y2bh` is not provided it will be estimated via `si_y2bh`.
 #'
 #' @param cu_index numeric or integer, explicit curve index
 #' @param site_height numeric, height at which to compute age
@@ -262,24 +264,15 @@ SI2AGE <- function(...) si_ht_to_age(...)
 #' @param species integer/numeric species index or species code (e.g. "SW", "FDI")
 #' @param curve curve selector when species is provided: "default", "first", numeric curve index, or curve name
 #' @param fiz optional FIZ code used when remapping species codes
-#' @param ... additional arguments passed through compatibility aliases
 #' @return numeric years to breast height
 #' @examples
-#' SIY2BH(1, 30)
-#' SIY2BH(site_index = 30, species = "SW")
+#' si_to_y2bh(1, 30)
+#' si_to_y2bh(site_index = 30, species = "SW")
 #' @export
-SIY2BH <- function(cu_index = NULL, site_index, species = NULL, curve = "default", fiz = NULL) {
+si_to_y2bh <- function(cu_index = NULL, site_index, species = NULL, curve = "default", fiz = NULL) {
   cu_index <- resolve_curve_index(cu_index = cu_index, species = species, curve = curve, fiz = fiz)
   sindex_y2bh(as.integer(cu_index), as.numeric(site_index))
 }
-
-#' @rdname SIY2BH
-#' @export
-si_to_y2bh <- function(...) SIY2BH(...)
-
-#' @rdname SIY2BH
-#' @export
-Y2BH <- function(...) SIY2BH(...)
 
 #' Years to breast height rounded to 0.5
 #'
@@ -291,24 +284,15 @@ Y2BH <- function(...) SIY2BH(...)
 #' @param species integer/numeric species index or species code (e.g. "SW", "FDI")
 #' @param curve curve selector when species is provided: "default", "first", numeric curve index, or curve name
 #' @param fiz optional FIZ code used when remapping species codes
-#' @param ... additional arguments passed through compatibility aliases
 #' @return numeric years to breast height rounded to 0.5-year steps
 #' @examples
-#' SIY2BH05(1, 30)
-#' SIY2BH05(site_index = 30, species = "SW")
+#' si_to_y2bh05(1, 30)
+#' si_to_y2bh05(site_index = 30, species = "SW")
 #' @export
-SIY2BH05 <- function(cu_index = NULL, site_index, species = NULL, curve = "default", fiz = NULL) {
+si_to_y2bh05 <- function(cu_index = NULL, site_index, species = NULL, curve = "default", fiz = NULL) {
   cu_index <- resolve_curve_index(cu_index = cu_index, species = species, curve = curve, fiz = fiz)
   si_y2bh05(as.integer(cu_index), as.numeric(site_index))
 }
-
-#' @rdname SIY2BH05
-#' @export
-si_to_y2bh05 <- function(...) SIY2BH05(...)
-
-#' @rdname SIY2BH05
-#' @export
-Y2BH05 <- function(...) SIY2BH05(...)
 
 #' Convert between breast height age and total age
 #'
@@ -348,7 +332,21 @@ Age2Age <- function(...) age_to_age(...)
 #' @noRd
 AgeToAge <- function(...) age_to_age(...)
 
-#' @rdname SIndexR_CurveNotes
+#' Curve notes
+#'
+#' Returns notes describing usage constraints or guidance for a site index curve.
+#' You can provide a curve index directly, or provide a species and let SIndexR
+#' resolve the curve using the `curve` selector.
+#'
+#' @param cu_index integer/numeric curve index. Optional when `species` is provided.
+#' @param species integer/numeric species index or species code (e.g. "SW", "FDI")
+#' @param curve curve selector when `species` is provided: "default", "first", or numeric curve index
+#' @param fiz optional FIZ code used when remapping species codes
+#' @return character vector of curve notes
+#' @examples
+#' curve_notes(cu_index = 112)
+#' curve_notes(species = "SW")
+#' curve_notes(species = "FDC", curve = "first")
 #' @export
 curve_notes <- function(cu_index = NULL, species = NULL, curve = "default", fiz = NULL) {
   if (!is.null(cu_index)) {
@@ -357,6 +355,35 @@ curve_notes <- function(cu_index = NULL, species = NULL, curve = "default", fiz 
   if (!is.null(species)) {
     cu_index <- resolve_curve_index(cu_index = cu_index, species = species, curve = curve, fiz = fiz)
     return(SIndexR_CurveNotes(cu_index))
+  }
+  stop("Provide either cu_index or species.")
+}
+
+#' Curve source citation
+#'
+#' Returns the bibliographic reference (author, year, journal or report) for the
+#' research paper that a site index curve is based on. Use this to look up the
+#' original publication and its equations.
+#' You can provide a curve index directly, or provide a species and let SIndexR
+#' resolve the curve using the `curve` selector.
+#'
+#' @param cu_index integer/numeric curve index. Optional when `species` is provided.
+#' @param species integer/numeric species index or species code (e.g. "SW", "FDI")
+#' @param curve curve selector when `species` is provided: "default", "first", or numeric curve index
+#' @param fiz optional FIZ code used when remapping species codes
+#' @return character string containing the full bibliographic citation
+#' @examples
+#' curve_source(cu_index = 112)
+#' curve_source(species = "SW")
+#' curve_source(species = "FDC", curve = "first")
+#' @export
+curve_source <- function(cu_index = NULL, species = NULL, curve = "default", fiz = NULL) {
+  if (!is.null(cu_index)) {
+    return(Sindex_CurveSource(as.integer(cu_index)))
+  }
+  if (!is.null(species)) {
+    cu_index <- resolve_curve_index(cu_index = cu_index, species = species, curve = curve, fiz = fiz)
+    return(Sindex_CurveSource(as.integer(cu_index)))
   }
   stop("Provide either cu_index or species.")
 }

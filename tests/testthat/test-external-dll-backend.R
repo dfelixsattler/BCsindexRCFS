@@ -35,8 +35,8 @@ test_that("external DLL mode matches built-in mode for core wrappers", {
 
   # Built-in baseline values
   b_ht2si <- HT2SI(age = 50, age_type = 1, height = 30, species = "FDC", curve = "Bruce (1981ac)")
-  b_si2ht <- SI2HT(iage = 50, age_type = 1, site_index = 30, species = "FDC", curve = "Bruce (1981ac)")
-  b_siy2bh <- SIY2BH(site_index = 30, species = "FDC", curve = "Bruce (1981ac)")
+  b_si2ht <- SI2HT(age = 50, age_type = 1, site_index = 30, species = "FDC", curve = "Bruce (1981ac)")
+  b_siy2bh <- si_to_y2bh(site_index = 30, species = "FDC", curve = "Bruce (1981ac)")
   b_si2age <- SI2AGE(site_height = 30, age_type = 1, site_index = 30, species = "FDC", curve = "Bruce (1981ac)")
   b_age2age <- Age2Age(age1 = 50, age1_type = 1, age2_type = 0, species = "FDC", curve = "Bruce (1981ac)")
 
@@ -45,8 +45,8 @@ test_that("external DLL mode matches built-in mode for core wrappers", {
 
   # External DLL values
   e_ht2si <- HT2SI(age = 50, age_type = 1, height = 30, species = "FDC", curve = "Bruce (1981ac)")
-  e_si2ht <- SI2HT(iage = 50, age_type = 1, site_index = 30, species = "FDC", curve = "Bruce (1981ac)")
-  e_siy2bh <- SIY2BH(site_index = 30, species = "FDC", curve = "Bruce (1981ac)")
+  e_si2ht <- SI2HT(age = 50, age_type = 1, site_index = 30, species = "FDC", curve = "Bruce (1981ac)")
+  e_siy2bh <- si_to_y2bh(site_index = 30, species = "FDC", curve = "Bruce (1981ac)")
   e_si2age <- SI2AGE(site_height = 30, age_type = 1, site_index = 30, species = "FDC", curve = "Bruce (1981ac)")
   e_age2age <- Age2Age(age1 = 50, age1_type = 1, age2_type = 0, species = "FDC", curve = "Bruce (1981ac)")
   e_sc2si <- SC2SI("FDI", "M", "H")
@@ -69,6 +69,6 @@ test_that("external DLL reproduces SiteTools anchor points", {
   expect_true(SIndexR_SetExternalDll(dll_path))
 
   # Anchors from SiteTools exports at BH age 50
-  expect_equal(SI2HT(iage = 50, age_type = 1, site_index = 30, species = "FDC", curve = "Bruce (1981ac)"), 30, tolerance = 5e-2)
-  expect_equal(SI2HT(iage = 50, age_type = 1, site_index = 30, species = "CWC", curve = "Nigh (2016)"), 30, tolerance = 5e-2)
+  expect_equal(SI2HT(age = 50, age_type = 1, site_index = 30, species = "FDC", curve = "Bruce (1981ac)"), 30, tolerance = 5e-2)
+  expect_equal(SI2HT(age = 50, age_type = 1, site_index = 30, species = "CWC", curve = "Nigh (2016)"), 30, tolerance = 5e-2)
 })

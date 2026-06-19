@@ -1,18 +1,18 @@
-# SIndexRCFS Wrapper Examples
+# BCsindexRCFS Wrapper Examples
 
-This guide summarizes the modern convenience wrappers in `SIndexRCFS` and
+This guide summarizes the modern convenience wrappers in `BCsindexRCFS` and
 how they fit into common forestry analysis workflows.
 
 ## Core wrapper usage
 
 ```r
-library(SIndexRCFS)
+library(BCsindexRCFS)
 
 # Height + age -> Site index
 ht_age_to_si(age = 50, age_type = 1, height = 30, species = "SW")
 
 # Site index -> Height
-si_to_ht(iage = 50, age_type = 1, site_index = 30, species = "SW")
+si_to_ht(age = 50, age_type = 1, site_index = 30, species = "SW")
 
 # Site index + height -> Age
 si_ht_to_age(site_height = 30, age_type = 1, site_index = 30, species = "SW")
@@ -39,15 +39,15 @@ species_name("SW")
 ## Run packaged examples
 
 ```sh
-Rscript -e "library(SIndexRCFS); source(system.file('examples','wrappers_example.R', package='SIndexRCFS'))"
-Rscript -e "library(SIndexRCFS); source(system.file('examples','psp_workflow_example.R', package='SIndexRCFS'))"
-Rscript -e "library(SIndexRCFS); source(system.file('examples','treelist_workflow_example.R', package='SIndexRCFS'))"
+Rscript -e "library(BCsindexRCFS); source(system.file('examples','wrappers_example.R', package='BCsindexRCFS'))"
+Rscript -e "library(BCsindexRCFS); source(system.file('examples','psp_workflow_example.R', package='BCsindexRCFS'))"
+Rscript -e "library(BCsindexRCFS); source(system.file('examples','treelist_workflow_example.R', package='BCsindexRCFS'))"
 ```
 
 ## Additional documentation
 
 ```r
-vignette("workflow-integration", package = "SIndexRCFS")
-vignette("legacy-interfaces", package = "SIndexRCFS")
+vignette("workflow-integration", package = "BCsindexRCFS")
+vignette("legacy-interfaces", package = "BCsindexRCFS")
 ```
 

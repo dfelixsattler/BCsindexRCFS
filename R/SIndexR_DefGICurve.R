@@ -10,21 +10,24 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-#' @title
-#' Returns default GI curve index for a species.
-#' @description
-#' Returns default GI curve index for a species.
-#' @param sp_index Integer/Numeric, Specifies species index.
-#' @return
-#'    Integer curve index, for use in other Sindex functions.
-#'    May return an error code under the following conditions:
+#' Default growth-intercept curve index
 #'
-#'    return value    condition
-#'    ------------    ---------
-#'    SI_ERR_SPEC     input parameter is not a valid species index
-#'    SI_ERR_NO_ANS   no GI equations defined for this species.
-#' @rdname SIndexR_DefGICurve
-SIndexR_DefGICurve <- function(sp_index){
-  sp_index <- wholeToInteger(sp_index, "sp_index")
-  return(unlist(lapply(sp_index, function(s) Sindex_DefGICurve(s))))
+#' Returns the default growth-intercept (GI) curve index for each species.
+#' This helper is used when workflows require GI-specific curve selection.
+#'
+#' @param species integer/numeric species index or species code (e.g. "FDC", "SW")
+#' @return integer vector of GI default curve indices (or SIndex error codes)
+#' @examples
+#' default_gi_curve("FDC")
+#' default_gi_curve(c("FDC", "SW"))
+#' @export
+default_gi_curve <- function(species) {
+  sp_index <- SIndexR_SpeciesIndex(species)
+  sp_index <- wholeToInteger(sp_index, "species")
+  unlist(lapply(sp_index, function(s) Sindex_DefGICurve(s)))
+}
+
+#' @noRd
+SIndexR_DefGICurve <- function(sp_index) {
+  default_gi_curve(species = sp_index)
 }

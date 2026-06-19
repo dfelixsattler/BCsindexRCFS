@@ -60,7 +60,7 @@ sindex_validate_sitetools_table <- function(sitetools_data, species_code, specie
     sitetools_heights <- as.numeric(data[[col_idx]])
     r_heights <- sapply(ages, function(age) {
       tryCatch(
-        SI2HT(iage = age, age_type = 1, site_index = si, species = species_code),
+        SI2HT(age = age, age_type = 1, site_index = si, species = species_code),
         error = function(e) NA_real_
       )
     })
@@ -99,43 +99,53 @@ sindex_validate_sitetools_table <- function(sitetools_data, species_code, specie
 
 #' Validate SiteTools CSV exports against SIndexR
 #'
-#' Reads SiteTools 4.4 CSV exports, compares the height table against the
-#' corresponding SIndexR wrapper, and optionally writes comparison CSV files.
+#' Reads one or more SiteTools 4.4 CSV exports, compares the height table for
+#' each species against the corresponding SIndexR wrapper, and optionally writes
+#' comparison CSV files.
 #'
-#' Set `use_external_dll = TRUE` to route supported wrappers through the
-#' runtime DLL backend configured via `SIndexR_SetExternalDll()`.
-#'
-#' @param fd_csv path to the Douglas-fir SiteTools CSV export
-#' @param cw_csv path to the western redcedar SiteTools CSV export
-#' @param output_dir directory where comparison CSV files are written
-#' @param use_external_dll logical; if TRUE, enable runtime external DLL mode for the run
-#' @param external_dll_path optional DLL path to load before validating
-#' @param save_results logical; write comparison CSVs to `output_dir`
-#' @param verbose logical; print summaries to the console
-#' @return a list with `fd`, `cw`, and `files` entries
+#' @param csv_files named character vector of CSV file paths. Names must be
+#'   SIndexR species codes (e.g. `c(FDC = "path/to/fd.csv", CWC = "path/to/cw.csv")`).
+#'   Any species exported from SiteTools can be included.
+#' @param output_dir directory where comparison CSV files are written. Defaults
+#'   to the directory of the first CSV file.
+#' @param use_external_dll logical; if TRUE, route calculations through the
+#'   runtime external DLL backend configured via `set_external_dll()`
+#' @param external_dll_path optional path to the external DLL to load before
+#'   validating. If omitted and `use_external_dll` is TRUE, falls back to the
+#'   `SINDEX_EXTERNAL_DLL` environment variable or `C:/sindex64.dll`
+#' @param save_results logical; write one comparison CSV per species to `output_dir`
+#' @param verbose logical; print per-species summaries to the console
+#' @return a list with a named entry per species code (each containing
+#'   `metadata`, `comparison`, and `summary`) plus a `files` entry with the
+#'   written CSV paths
 #' @examples
 #' \dontrun{
-#' ValidateSiteTools(
-#'   fd_csv = "C:/SIndexR/my_tests/SiteToolsExport_Fd.csv",
-#'   cw_csv = "C:/SIndexR/my_tests/SiteToolsExport_Cw.csv",
+#' validate_site_tools(
+#'   csv_files = c(
+#'     FDC = "C:/SIndexR/my_tests/SiteToolsExport_Fd.csv",
+#'     CWC = "C:/SIndexR/my_tests/SiteToolsExport_Cw.csv"
+#'   ),
 #'   output_dir = "C:/SIndexR/my_tests",
 #'   use_external_dll = TRUE,
 #'   external_dll_path = "C:/sindex64.dll"
 #' )
 #' }
 #' @export
-ValidateSiteTools <- function(fd_csv,
-                                      cw_csv,
-                                      output_dir = dirname(fd_csv),
-                                      use_external_dll = FALSE,
-                                      external_dll_path = NULL,
-                                      save_results = TRUE,
-                                      verbose = TRUE) {
-  if (!file.exists(fd_csv)) {
-    stop("FD CSV does not exist: ", fd_csv)
+validate_site_tools <- function(csv_files,
+                                output_dir = dirname(csv_files[[1]]),
+                                use_external_dll = FALSE,
+                                external_dll_path = NULL,
+                                save_results = TRUE,
+                                verbose = TRUE) {
+  if (!is.character(csv_files) || is.null(names(csv_files)) || any(!nzchar(names(csv_files)))) {
+    stop("csv_files must be a named character vector of species code -> CSV path, ",
+         "e.g. c(FDC = 'path/to/fd.csv', CWC = 'path/to/cw.csv')")
   }
-  if (!file.exists(cw_csv)) {
-    stop("CW CSV does not exist: ", cw_csv)
+
+  for (path in csv_files) {
+    if (!file.exists(path)) {
+      stop("CSV does not exist: ", path)
+    }
   }
 
   dll_loaded <- FALSE
@@ -146,44 +156,41 @@ ValidateSiteTools <- function(fd_csv,
     if (!nzchar(external_dll_path)) {
       stop("use_external_dll is TRUE but no external_dll_path was supplied.")
     }
-    dll_loaded <- isTRUE(SIndexR_SetExternalDll(external_dll_path))
+    dll_loaded <- isTRUE(set_external_dll(external_dll_path))
   }
 
   on.exit({
-    if (dll_loaded) {
-      SIndexR_ClearExternalDll()
-    }
+    if (dll_loaded) clear_external_dll()
   }, add = TRUE)
 
-  fd_data <- sindex_parse_sitetools_csv(fd_csv)
-  cw_data <- sindex_parse_sitetools_csv(cw_csv)
+  results <- list()
+  file_paths <- list()
 
-  fd_result <- sindex_validate_sitetools_table(fd_data, "FDC", "Douglas-fir")
-  cw_result <- sindex_validate_sitetools_table(cw_data, "CWC", "Western redcedar")
+  for (sp_code in names(csv_files)) {
+    path <- csv_files[[sp_code]]
+    sp_label <- tryCatch(species_name(sp_code), error = function(e) sp_code)
 
-  if (save_results) {
-    if (!dir.exists(output_dir)) {
-      dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+    parsed <- sindex_parse_sitetools_csv(path)
+    result <- sindex_validate_sitetools_table(parsed, sp_code, sp_label)
+    results[[sp_code]] <- result
+
+    if (save_results) {
+      if (!dir.exists(output_dir)) {
+        dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+      }
+      out_file <- file.path(output_dir, paste0("Validation_", sp_code, "_Comparison.csv"))
+      write.csv(result$comparison, out_file, row.names = FALSE)
+      file_paths[[sp_code]] <- out_file
+    } else {
+      file_paths[[sp_code]] <- NA_character_
     }
-    fd_file <- file.path(output_dir, "Validation_FD_Comparison.csv")
-    cw_file <- file.path(output_dir, "Validation_CW_Comparison.csv")
-    write.csv(fd_result$comparison, fd_file, row.names = FALSE)
-    write.csv(cw_result$comparison, cw_file, row.names = FALSE)
-  } else {
-    fd_file <- NA_character_
-    cw_file <- NA_character_
+
+    if (verbose) {
+      cat(sp_label, "(", sp_code, ") summary:\n")
+      print(result$summary)
+      cat("\n")
+    }
   }
 
-  if (verbose) {
-    cat("FD summary:\n")
-    print(fd_result$summary)
-    cat("\nCW summary:\n")
-    print(cw_result$summary)
-  }
-
-  list(
-    fd = fd_result,
-    cw = cw_result,
-    files = list(fd = fd_file, cw = cw_file)
-  )
+  c(results, list(files = file_paths))
 }

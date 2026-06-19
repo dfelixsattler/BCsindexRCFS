@@ -1,4 +1,4 @@
-Package: SIndexRCFS
+Package: BCsindexRCFS
 Type: Package
 Title: Site Index Tools in R for PSP and Growth Workflows
 Version: 0.2.0

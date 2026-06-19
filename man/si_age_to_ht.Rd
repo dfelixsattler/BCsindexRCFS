@@ -6,7 +6,7 @@
 \usage{
 si_age_to_ht(
   cu_index = NULL,
-  iage,
+  age,
   age_type = 1,
   site_index,
   y2bh = NA_real_,
@@ -19,9 +19,11 @@ si_age_to_ht(
 \arguments{
 \item{cu_index}{numeric or integer, explicit curve index}
 
-\item{iage}{numeric, age to convert}
+\item{age}{numeric, age to convert}
 
-\item{age_type}{integer, one of the `SI_AT_*` constants}
+\item{age_type}{integer, defines age type. Must be one of: \code{0}, the age
+  is the total age of the stand in years since planting; \code{1}, the age
+  indicates the number of years since the stand reached breast height.}
 
 \item{site_index}{numeric, site index value}
 
@@ -45,5 +47,5 @@ a quadratic function is used. If `y2bh` is not provided it will be estimated via
 }
 \examples{
 si_age_to_ht(1, 50, 1, 30)
-si_age_to_ht(iage = 50, site_index = 30, species = "SW")
+si_age_to_ht(age = 50, site_index = 30, species = "SW")
 }

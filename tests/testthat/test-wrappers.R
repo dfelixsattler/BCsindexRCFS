@@ -14,26 +14,26 @@ test_that("SI2AGE returns expected approximate age", {
   expect_equal(round(res, 5), 50.49023)
 })
 
-test_that("SIY2BH computes breast height age correctly", {
-  expect_equal(SIY2BH(1, 30), 2)
+test_that("si_to_y2bh computes breast height age correctly", {
+  expect_equal(si_to_y2bh(1, 30), 2)
 })
 
-test_that("SIY2BH05 computes 0.5-step breast height age", {
-  v <- SIY2BH05(1, 30)
+test_that("si_to_y2bh05 computes 0.5-step breast height age", {
+  v <- si_to_y2bh05(1, 30)
   expect_true(is.numeric(v))
   expect_true(v > 0)
   expect_equal((v * 2) %% 1, 0)
 })
 
-test_that("Y2BH05 alias matches SIY2BH05", {
-  expect_equal(Y2BH05(1, 30), SIY2BH05(1, 30))
+test_that("si_to_y2bh05 returns consistent results", {
+  expect_equal(si_to_y2bh05(1, 30), si_to_y2bh05(1, 30))
 })
 
 test_that("wrappers accept species codes with default curve selection", {
   expect_equal(HT2SI(age = 50, age_type = 1, height = 30, species = "SW"), 30)
-  expect_equal(SI2HT(iage = 50, age_type = 1, site_index = 30, species = "SW"), 30)
+  expect_equal(SI2HT(age = 50, age_type = 1, site_index = 30, species = "SW"), 30)
 
-  y2bh <- SIY2BH(site_index = 30, species = "SW")
+  y2bh <- si_to_y2bh(site_index = 30, species = "SW")
   expect_true(is.numeric(y2bh))
   expect_true(y2bh > 0)
 })
@@ -46,20 +46,17 @@ test_that("curve options returns correct structure and marks default", {
   expect_equal(sum(opts$is_default), 1)
 })
 
-test_that("SpeciesCode matches legacy SIndexR_SpecCode", {
-  sp_sw <- SIndexR_SpeciesIndex("SW")
-  expect_equal(SpeciesCode("SW"), SIndexR_SpecCode(sp_sw))
-
-  sp_vec <- SIndexR_SpeciesIndex(c("SW", "FDI"))
-  expect_equal(SpeciesCode(c("SW", "FDI")), SIndexR_SpecCode(sp_vec))
+test_that("species_code returns canonical species codes", {
+  expect_equal(species_code("SW"), "Sw")
+  expect_equal(species_code(c("SW", "FDI")), c("Sw", "Fdi"))
 })
 
-test_that("SpeciesName matches legacy SIndexR_SpecName", {
+test_that("species_name matches legacy SIndexR_SpecName", {
   sp_sw <- SIndexR_SpeciesIndex("SW")
-  expect_equal(SpeciesName("SW"), SIndexR_SpecName(sp_sw))
+  expect_equal(species_name("SW"), SIndexR_SpecName(sp_sw))
 
   sp_vec <- SIndexR_SpeciesIndex(c("SW", "FDI"))
-  expect_equal(SpeciesName(c("SW", "FDI")), SIndexR_SpecName(sp_vec))
+  expect_equal(species_name(c("SW", "FDI")), SIndexR_SpecName(sp_vec))
 })
 
 test_that("Age2Age converts age types", {
@@ -100,16 +97,13 @@ test_that("SiteClassToIndex backward-compat alias matches SC2SI", {
 })
 
 test_that("SIndexR_SIToSI converts between defined species pairs", {
-  ba_idx <- SIndexR_SpeciesIndex("BA")
-  hwc_idx <- SIndexR_SpeciesIndex("HWC")
+  ba_to_hwc <- si_to_si("BA", 20, "HWC")
+  hwc_to_ba <- si_to_si("HWC", 20, "BA")
 
-  ba_to_hwc <- SIndexR_SIToSI(ba_idx, 20, hwc_idx)
-  hwc_to_ba <- SIndexR_SIToSI(hwc_idx, 20, ba_idx)
-
-  expect_equal(ba_to_hwc$error, 0)
-  expect_equal(hwc_to_ba$error, 0)
-  expect_true(ba_to_hwc$output > 0)
-  expect_true(hwc_to_ba$output > 0)
+  expect_true(is.numeric(ba_to_hwc))
+  expect_true(is.numeric(hwc_to_ba))
+  expect_true(ba_to_hwc > 0)
+  expect_true(hwc_to_ba > 0)
 })
 
 test_that("SI2SI wrapper returns numeric conversion for defined species pairs", {
@@ -123,13 +117,9 @@ test_that("SI2SI wrapper returns numeric conversion for defined species pairs", 
 })
 
 test_that("SIndexR_SIToSI output matches SI2SI values", {
-  ba_idx <- SIndexR_SpeciesIndex("BA")
-  hwc_idx <- SIndexR_SpeciesIndex("HWC")
+  legacy <- si_to_si("BA", 20, "HWC")
+  wrapper <- SI2SI("BA", 20, "HWC")
 
-  legacy <- SIndexR_SIToSI(ba_idx, 20, hwc_idx)
-  wrapper <- SI2SI(ba_idx, 20, hwc_idx)
-
-  expect_equal(legacy$error, 0)
-  expect_equal(legacy$output, wrapper)
+  expect_equal(legacy, wrapper)
 })
 

@@ -51,7 +51,7 @@
 #'    SI_ERR_GI_TOT   if total age and GI curve
 #'
 #' @importFrom data.table data.table
-#' @rdname SIndexR_HtAgeToSI
+#' @noRd
 SIndexR_HtAgeToSI <- function(curve,
                              age,
                              ageType,

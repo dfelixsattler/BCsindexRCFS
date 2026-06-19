@@ -1,5 +1,5 @@
 library(testthat)
-library(SIndexRCFS)
+library(BCsindexRCFS)
 
-test_check("SIndexRCFS")
+test_check("BCsindexRCFS")
 

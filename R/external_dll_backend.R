@@ -9,7 +9,21 @@
 #' @return logical TRUE if loaded successfully
 #' @examples
 #' \dontrun{
-#' set_external_dll("C:/sindex64.dll")
+#' # Load an external Sindex DLL
+#' set_external_dll("C:/Program Files/Sindex/sindex64.dll")
+#'
+#' # Confirm it loaded
+#' external_dll_info()
+#' # $loaded
+#' # [1] TRUE
+#' # $dll_path
+#' # [1] "C:/Program Files/Sindex/sindex64.dll"
+#'
+#' # Wrapper functions now use the external DLL
+#' si_age_to_ht(species = "FDC", age = 50, site_index = 28)
+#'
+#' # Revert to built-in implementation when done
+#' clear_external_dll()
 #' }
 #' @export
 set_external_dll <- function(dll_path) {
@@ -79,13 +93,21 @@ sindex_class_to_index <- function(sp_index, site_class, fiz) {
 }
 
 sindex_cpp_age_to_age <- function(cu_index, age1, age1_type, age2_type, y2bh) {
-  .Call(`_SIndexRCFS_age_to_age`,
+  .Call(`_BCsindexRCFS_age_to_age`,
     as.integer(cu_index),
     as.numeric(age1),
     as.integer(age1_type),
     as.integer(age2_type),
     as.numeric(y2bh)
   )
+}
+
+sindex_version_number <- function() {
+  if (sindex_use_external()) {
+    v <- sindex_ext_version_number()
+    if (v >= 0) return(as.integer(v))
+  }
+  Sindex_VersionNumber()
 }
 
 # Curves that use a +/-0.5 adjustment in age conversion logic.
@@ -124,14 +146,18 @@ sindex_age_to_age <- function(cu_index, age1, age1_type, age2_type, y2bh) {
 #'
 #' @return invisible TRUE
 #' @examples
+#' \dontrun{
+#' # After set_external_dll() has been called, revert to built-in:
 #' clear_external_dll()
+#' external_dll_info()$loaded  # FALSE
+#' }
 #' @export
 clear_external_dll <- function() {
   sindex_ext_clear_dll()
   invisible(TRUE)
 }
 
-#' @rdname clear_external_dll
+#' @noRd
 #' @export
 SIndexR_ClearExternalDll <- function() {
   clear_external_dll()

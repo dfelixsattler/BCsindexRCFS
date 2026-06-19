@@ -22,6 +22,7 @@
 #' sp <- SIndexR_FirstSpecies()
 #' SIndexR_CurveList(sp)
 #' SIndexR_CurveList("Sw")
+#' @noRd
 #' @export
 SIndexR_CurveList <- function(sp_index) {
   sp_index <- SIndexR_SpeciesIndex(sp_index)

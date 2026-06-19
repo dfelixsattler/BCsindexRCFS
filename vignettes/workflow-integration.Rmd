@@ -1,16 +1,16 @@
 ---
-title: "SIndexRCFS Workflow Integration Examples"
-author: "SIndexRCFS Contributors"
+title: "BCsindexRCFS Workflow Integration Examples"
+author: "BCsindexRCFS Contributors"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{SIndexRCFS Workflow Integration Examples}
+  %\VignetteIndexEntry{BCsindexRCFS Workflow Integration Examples}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(SIndexRCFS)
+library(BCsindexRCFS)
 ```
 
 ## Overview
@@ -25,25 +25,48 @@ The examples use generic sample datasets included in the package under `inst/exa
 ## 1) PSP Workflow Example
 
 Typical PSP programs maintain dominant height and age observations by plot and measurement year.
-Using those fields, SIndexRCFS can derive site index and years to breast height.
+Using those fields, BCsindexRCFS can derive site index and years to breast height.
 
 ```{r psp-load}
-psp_path <- system.file("examples", "psp_sample.csv", package = "SIndexRCFS")
+psp_path <- system.file("examples", "psp_sample.csv", package = "BCsindexRCFS")
 psp <- read.csv(psp_path, stringsAsFactors = FALSE)
 psp
 ```
 
 ```{r psp-calc}
-psp$site_index_m <- mapply(
-  function(sp, age, age_type, h, est_type) {
-    ht_age_to_si(age = age, age_type = age_type, height = h, si_est_type = est_type, species = sp)
+# Resolve the default curve for each species — this gives us both the curve
+# index (cu_index) and the equation name used for the site index calculation.
+psp$cu_index <- mapply(
+  function(sp) {
+    df <- curve_options(sp)
+    df$curve_index[df$is_default]
   },
-  psp$species, psp$bh_age, psp$age_type, psp$dom_height_m, psp$si_est_type
+  psp$species
+)
+
+psp$curve_name <- vapply(
+  psp$cu_index,
+  function(cu) SIndexR_CurveName(as.integer(cu)),
+  character(1)
+)
+
+psp$curve_source <- vapply(
+  psp$cu_index,
+  function(cu) curve_source(cu_index = cu),
+  character(1)
+)
+
+# Now compute SI and y2bh using the resolved curve index directly.
+psp$site_index_m <- mapply(
+  function(cu, age, age_type, h, est_type) {
+    ht_age_to_si(cu_index = cu, age = age, age_type = age_type, height = h, si_est_type = est_type)
+  },
+  psp$cu_index, psp$bh_age, psp$age_type, psp$dom_height_m, psp$si_est_type
 )
 
 psp$y2bh_years <- mapply(
-  function(sp, si) si_to_y2bh(site_index = si, species = sp),
-  psp$species, psp$site_index_m
+  function(cu, si) si_to_y2bh(cu_index = cu, site_index = si),
+  psp$cu_index, psp$site_index_m
 )
 
 psp
@@ -61,6 +84,7 @@ aggregate(
 
 - **Site index (`site_index_m`)** gives a comparable productivity metric among plots.
 - **Years to breast height (`y2bh_years`)** supports age conversions and growth model setup.
+- **`cu_index` and `curve_name`** document exactly which equation was applied — important for auditability and reproducing results with other tools such as SiteTools.
 
 ## 2) Treelist Workflow for Growth and Yield Inputs
 
@@ -68,8 +92,8 @@ A common workflow is to estimate stand-level productivity from dominant age/heig
 then attach those attributes to each tree record used by a growth model.
 
 ```{r treelist-load}
-stands_path <- system.file("examples", "stand_inputs_sample.csv", package = "SIndexRCFS")
-trees_path <- system.file("examples", "treelist_sample.csv", package = "SIndexRCFS")
+stands_path <- system.file("examples", "stand_inputs_sample.csv", package = "BCsindexRCFS")
+trees_path <- system.file("examples", "treelist_sample.csv", package = "BCsindexRCFS")
 
 stands <- read.csv(stands_path, stringsAsFactors = FALSE)
 trees <- read.csv(trees_path, stringsAsFactors = FALSE)
@@ -90,7 +114,7 @@ stands$y2bh_years <- mapply(
 )
 
 stands$proj_height_m <- mapply(
-  function(sp, age, si, y2bh) si_age_to_ht(iage = age, age_type = 1, site_index = si, y2bh = y2bh, species = sp),
+  function(sp, age, si, y2bh) si_age_to_ht(age = age, age_type = 1, site_index = si, y2bh = y2bh, species = sp),
   stands$dom_species, stands$projection_age, stands$site_index_m, stands$y2bh_years
 )
 
@@ -119,7 +143,7 @@ model_treelist
 You can run the equivalent script versions directly:
 
 ```r
-source(system.file("examples", "psp_workflow_example.R", package = "SIndexRCFS"))
-source(system.file("examples", "treelist_workflow_example.R", package = "SIndexRCFS"))
+source(system.file("examples", "psp_workflow_example.R", package = "BCsindexRCFS"))
+source(system.file("examples", "treelist_workflow_example.R", package = "BCsindexRCFS"))
 ```
 

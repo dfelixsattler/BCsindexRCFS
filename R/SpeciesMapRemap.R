@@ -25,8 +25,7 @@
 #' @note
 #'    Species code string can be 1, 2, or 3 letters; upper/lower case
 #'      is ignored.
-#' @export
-#' @rdname SIndexR_SpecMap
+#' @noRd
 SIndexR_SpecMap <- function(sc)
 {
   return(unlist(lapply(sc, function(s) species_map (s))))
@@ -44,8 +43,7 @@ SIndexR_SpecMap <- function(sc)
 #'    SI_ERR_FIZ      if FIZ code is unknown
 #' @note
 #'    Species code string can be 1, 2, or 3 letters; upper/lower case is ignored.
-#' @export
-#' @rdname SIndexR_SpecMap
+#' @noRd
 SIndexR_SpeciesIndex <- function(species, fiz = NULL)
 {
   if (is.factor(species)) {
@@ -79,44 +77,37 @@ SIndexR_SpeciesIndex <- function(species, fiz = NULL)
 }
 
 
-#' @title
-#'  Remap species to recommended species, and return species index
-#' @description
-#'  Remap species to recommended species, and return species index
-#' @param sc Character, Species code.
-#' @param fiz Character. Forest inventory zone: (A,B,C)=coast,
-#'                       (D,E,F,G,H,I,J,K,L)=interior.
+#' Resolve species index using FIZ-aware remapping
 #'
-#'  @return Species index.
-#'    May return an error code under the following conditions:
+#' Converts species code(s) to the recommended integer species index using the
+#' Forest Inventory Zone (FIZ) to disambiguate codes that map to different species
+#' depending on coast vs interior (e.g. `"FD"` → `FDC` on coast, `FDI` in interior).
 #'
-#'    return value    condition
-#'    ------------    ---------
-#'    SI_ERR_CODE     if species code is unknown
-#'    SI_ERR_FIZ      if FIZ code is unknown
-#'
-#' @note
-#'    Species code string can be 1, 2, or 3 letters; upper/lower case
-#'      is ignored.  FIZ is only used where needed, such as for species
-#'      code "FD".
+#' @param species character species code(s) (e.g. `"FD"`, `"Sw"`)
+#' @param fiz character FIZ code(s): `A`–`C` for coast, `D`–`L` for interior.
+#'   Recycled to the length of `species` if length 1.
+#' @return integer vector of remapped species indices
+#' @examples
+#' species_to_sp_index("FD", "A")   # coastal Douglas-fir
+#' species_to_sp_index("FD", "D")   # interior Douglas-fir
+#' species_to_sp_index(c("Sw", "Pl"), "H")
 #' @export
-#' @rdname   SIndexR_SpecRemap
-SIndexR_SpecRemap <- function(sc, fiz)
-{
-  if(length(sc) == 1 & length(fiz) != 1){
-    sc <- rep(sc, length(fiz))
+species_to_sp_index <- function(species, fiz) {
+  if (length(species) == 1 && length(fiz) != 1) {
+    species <- rep(species, length(fiz))
   }
-  if(length(sc) != 1 & length(fiz) == 1){
-    fiz <- rep(fiz, length(sc))
+  if (length(species) != 1 && length(fiz) == 1) {
+    fiz <- rep(fiz, length(species))
   }
-  if(length(sc) != length(fiz)){
-    stop("sc and fiz do not have same length.")
+  if (length(species) != length(fiz)) {
+    stop("species and fiz must have the same length, or one must be length 1.")
   }
-  sc_list <- lapply(sc, function(s) s)
-  fiz_list <- lapply(fiz, function(s) s)
-  allinputs <- Map(list, sc_list, fiz_list)
-  return(unlist(lapply(allinputs, function(s) species_remap(sc = s[[1]],
-                                                               fiz = s[[2]]))))
+  inputs <- Map(list, species, fiz)
+  unlist(lapply(inputs, function(x) species_remap(sc = x[[1]], fiz = x[[2]])))
+}
 
+#' @noRd
+SIndexR_SpecRemap <- function(sc, fiz) {
+  species_to_sp_index(species = sc, fiz = fiz)
 }
 

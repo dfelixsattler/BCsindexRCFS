@@ -2,12 +2,9 @@
 % Please edit documentation in R/wrappers.R
 \name{species_name}
 \alias{species_name}
-\alias{SpeciesName}
 \title{Get species full name}
 \usage{
 species_name(species, fiz = NULL)
-
-SpeciesName(...)
 }
 \arguments{
 \item{species}{integer/numeric species index or species code (e.g. "SW", "FDI")}

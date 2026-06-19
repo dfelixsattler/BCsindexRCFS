@@ -1,9 +1,9 @@
-library(SIndexRCFS)
+library(BCsindexRCFS)
 
 # Example: Treelist preparation for growth and yield input.
 # Goal: derive stand-level SI from dominant age/height, then attach y2bh and projection height.
-stands_path <- system.file("examples", "stand_inputs_sample.csv", package = "SIndexRCFS")
-trees_path <- system.file("examples", "treelist_sample.csv", package = "SIndexRCFS")
+stands_path <- system.file("examples", "stand_inputs_sample.csv", package = "BCsindexRCFS")
+trees_path <- system.file("examples", "treelist_sample.csv", package = "BCsindexRCFS")
 
 stands <- read.csv(stands_path, stringsAsFactors = FALSE)
 trees <- read.csv(trees_path, stringsAsFactors = FALSE)
@@ -19,7 +19,7 @@ stands$y2bh_years <- mapply(
 )
 
 stands$proj_height_m <- mapply(
-  function(sp, age, si, y2bh) si_to_ht(iage = age, age_type = 1, site_index = si, y2bh = y2bh, species = sp),
+  function(sp, age, si, y2bh) si_to_ht(age = age, age_type = 1, site_index = si, y2bh = y2bh, species = sp),
   stands$dom_species, stands$projection_age, stands$site_index_m, stands$y2bh_years
 )
 

@@ -39,18 +39,14 @@ si <- ht_age_to_si(age = 50, height = 30, species = "SW")
 
 | Legacy Function | Modern Function | Key Improvements |
 |-----------------|-----------------|------------------|
-| `SIndexR_AgeSIToHt(curve, age, ageType, siteIndex, y2bh)` | `si_to_ht(cu_index = NULL, iage, age_type = 1, site_index, y2bh = NA_real_, pi = 0.5, species = NULL, curve = "default", fiz = NULL)` | Accepts species codes, simpler return value, external DLL support |
+| `SIndexR_AgeSIToHt()` *(removed)* | `si_age_to_ht(cu_index = NULL, age, age_type = 1, site_index, y2bh = NA_real_, pi = 0.5, species = NULL, curve = "default", fiz = NULL)` | Accepts species codes, simpler return value, external DLL support |
 
 **Example:**
 ```r
-# Old way (legacy)
-result <- SIndexR_AgeSIToHt(1, 50, 1, 30, 2)
-height <- result$output
-
 # New way (modern)
-height <- si_to_ht(1, 50, 1, 30, 2)
+height <- si_age_to_ht(1, 50, 1, 30, 2)
 # Or with species code:
-height <- si_to_ht(iage = 50, site_index = 30, species = "SW")
+height <- si_age_to_ht(age = 50, site_index = 30, species = "SW")
 ```
 
 ### Height to Age (Site Index)
@@ -61,10 +57,6 @@ height <- si_to_ht(iage = 50, site_index = 30, species = "SW")
 
 **Example:**
 ```r
-# Old way (legacy)
-result <- SIndexR_HtSIToAge(1, 30, 1, 30, 2)
-age <- result$output
-
 # New way (modern)
 age <- si_ht_to_age(1, 30, 1, 30, 2)
 # Or with species code:
@@ -158,13 +150,13 @@ Recommended action categories:
 | Existing Function | Role | Recommendation | Modernization Value | Notes |
 |-------------------|------|----------------|---------------------|-------|
 | `SIndexR_CurveName` | Curve metadata lookup | Keep | Low | Stable utility; clear single-purpose behavior |
-| `SIndexR_CurveNotes` | Curve metadata lookup | Keep | Low | Stable utility; mostly informational text |
-| `SIndexR_CurveSource` | Curve metadata lookup | Keep | Low | Stable utility; consistent with metadata family |
-| `SIndexR_CurveToSpecies` | Curve-to-species mapping | Add modern alias | Medium | Candidate alias: `CurveSpecies()` returning typed vector |
-| `SIndexR_CurveUse` | Curve usage flag/metadata | Keep | Low | Keep as compatibility helper unless usage friction appears |
-| `SIndexR_DefCurve` | Default curve for species | Add modern alias | High | Candidate alias: `default_curve()` with species-code input |
-| `SIndexR_DefCurveEst` | Default curve estimation mode | Keep | Low | Specialized, low-frequency helper |
-| `SIndexR_DefGICurve` | Default GI curve lookup | Keep | Low | Specialized; modernizing can wait |
+| `SIndexR_CurveNotes` | Curve metadata lookup | Keep (hidden) | Low | Replaced by `curve_notes`; legacy kept for compatibility |
+| `SIndexR_CurveSource` | Curve metadata lookup | Removed | — | Function not found; removed from package |
+| `SIndexR_CurveToSpecies` | Curve-to-species mapping | Removed | — | Function not found; removed from package |
+| `SIndexR_CurveUse` | Curve usage flag/metadata | Removed | — | Function not found; removed from package |
+| `SIndexR_DefCurve` | Default curve for species | Removed | — | Function not found; removed from package |
+| `SIndexR_DefCurveEst` | Default curve estimation mode | Renamed | Medium | Modern name: `default_curve_estab()` |
+| `SIndexR_DefGICurve` | Default GI curve lookup | Renamed | Medium | Modern name: `default_gi_curve()` |
 | `SIndexR_FirstSpecies` | Species iteration start | Add modern alias | Medium | Candidate alias: `SpeciesFirst()` for readability |
 | `SIndexR_NextSpecies` | Species iteration step | Add modern alias | Medium | Candidate alias: `SpeciesNext()` and iterator-style docs |
 | `SIndexR_SpecCode` | Species index to code | Add modern alias | High | Candidate alias: `species_code()` with vectorized behavior |

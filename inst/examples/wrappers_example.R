@@ -1,5 +1,5 @@
-## Examples for SIndexRCFS wrapper functions
-library(SIndexRCFS)
+## Examples for BCsindexRCFS wrapper functions
+library(BCsindexRCFS)
 
 cat('ht_age_to_si(1,50,1,30,0) =>', ht_age_to_si(1,50,1,30,0), '\n')
 cat('si_to_ht(1,50,1,30) =>', si_to_ht(1,50,1,30), '\n')

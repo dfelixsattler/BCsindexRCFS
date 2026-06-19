@@ -1,16 +1,16 @@
 ---
-title: "SIndexRCFS Wrappers"
-author: "SIndexRCFS Contributors"
+title: "BCsindexRCFS Wrappers"
+author: "BCsindexRCFS Contributors"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{SIndexRCFS Wrappers}
+  %\VignetteIndexEntry{BCsindexRCFS Wrappers}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(SIndexRCFS)
+library(BCsindexRCFS)
 ```
 
 # Introduction

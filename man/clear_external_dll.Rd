@@ -2,12 +2,9 @@
 % Please edit documentation in R/external_dll_backend.R
 \name{clear_external_dll}
 \alias{clear_external_dll}
-\alias{SIndexR_ClearExternalDll}
 \title{Disable external Sindex DLL backend}
 \usage{
 clear_external_dll()
-
-SIndexR_ClearExternalDll()
 }
 \value{
 invisible TRUE
@@ -16,5 +13,9 @@ invisible TRUE
 Unloads the external DLL and returns wrappers to built-in implementation.
 }
 \examples{
+\dontrun{
+# After set_external_dll() has been called, revert to built-in:
 clear_external_dll()
+external_dll_info()$loaded  # FALSE
+}
 }

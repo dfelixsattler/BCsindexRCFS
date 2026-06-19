@@ -18,6 +18,20 @@ Loads an external `sindex*.dll` and enables core wrapper calls (`HT2SI`,
 }
 \examples{
 \dontrun{
-set_external_dll("C:/sindex64.dll")
+# Load an external Sindex DLL
+set_external_dll("C:/Program Files/Sindex/sindex64.dll")
+
+# Confirm it loaded
+external_dll_info()
+# $loaded
+# [1] TRUE
+# $dll_path
+# [1] "C:/Program Files/Sindex/sindex64.dll"
+
+# Wrapper functions now use the external DLL
+si_age_to_ht(species = "FDC", age = 50, site_index = 28)
+
+# Revert to built-in implementation when done
+clear_external_dll()
 }
 }

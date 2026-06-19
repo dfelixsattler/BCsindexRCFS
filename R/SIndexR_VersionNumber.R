@@ -10,36 +10,25 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-#' @title
-#' Sindex version
-#' @description
-#' Returns the version number of the Sindex routines.
+#' SIndex library version number
 #'
-#' @return
-#' The number indicating the version of the Sindex routines.
+#' Returns the version number of the built-in Sindex routines.
 #'
-#' @note
-#' The format of the number is always in the form of Mmm:
-#'    where  M:    the major release number (1, 2, ...)
-#'          mm:    the minor release number (0, 1, ..., 99)
+#' The version is an integer in the form `Mmm` where `M` is the major
+#' release and `mm` is the minor release (e.g. `631` = version 6.31).
+#' If the major release is greater than what your application expects,
+#' assume the Sindex routines are not backward compatible.
 #'
-#'    An example would be: 631, meaning version 6.31
-#'
-#'    If the major release is greater than what your application expects,
-#'    assume that the Sindex routines cannot be used, and that the user
-#'    needs to obtain a newer version of sindex.dll.
-#'
-#'    Minor release changes will include the following:
-#'     - addition of a function
-#'     - changed return values (i.e. error messages)
-#'     - iterating for solutions may generate different results
-#'     - bug fixes in implementation of site index equations
-#'     - addition of species
-#'     - addition of curve sources (equations)
-#'     - change of default curve for a species
-#'     - change of mapping species to a different species
+#' @return integer version number
+#' @examples
+#' sindex_version()
 #' @export
-#' @rdname SIndexR_VersionNumber
-SIndexR_VersionNumber <- function(){
-  return(Sindex_VersionNumber())
+sindex_version <- function() {
+  sindex_version_number()
+}
+
+#' @noRd
+#' @export
+SIndexR_VersionNumber <- function() {
+  sindex_version()
 }

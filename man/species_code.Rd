@@ -2,12 +2,9 @@
 % Please edit documentation in R/wrappers.R
 \name{species_code}
 \alias{species_code}
-\alias{SpeciesCode}
 \title{Get canonical species code}
 \usage{
 species_code(species, fiz = NULL)
-
-SpeciesCode(...)
 }
 \arguments{
 \item{species}{integer/numeric species index or species code (e.g. "SW", "FDI")}

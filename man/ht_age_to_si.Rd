@@ -20,11 +20,16 @@ ht_age_to_si(
 
 \item{age}{numeric, age of the tree}
 
-\item{age_type}{integer, one of the `SI_AT_*` constants (default: `SI_AT_BREAST`)}
+\item{age_type}{integer, defines age type. Must be one of: `0`, the age is the
+total age of the stand in years since planting; `1`, the age indicates the
+number of years since the stand reached breast height.}
 
-\item{height}{numeric, tree height}
+\item{height}{numeric, tree height in metres}
 
-\item{si_est_type}{integer, estimation type (default: `SI_EST_ITERATE`)}
+\item{si_est_type}{integer, defines estimation method. Must be one of:
+`0` (`SI_EST_DIRECT`), compute site index using direct equations if available,
+automatically falling back to iterative if not; `1` (`SI_EST_ITERATE`),
+always compute site index using the iterative convergence method.}
 
 \item{species}{integer/numeric species index or species code (e.g. "SW", "FDI")}
 

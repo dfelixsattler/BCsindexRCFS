@@ -1,5 +1,5 @@
-#' SIndexRCFS: Site Tools in R
-#' @useDynLib SIndexRCFS, .registration=TRUE
+#' BCsindexRCFS: Site Tools in R
+#' @useDynLib BCsindexRCFS, .registration=TRUE
 #' @importFrom Rcpp evalCpp
 #' @importFrom stats aggregate optimize sd
 #' @importFrom utils read.csv write.csv
@@ -8,8 +8,12 @@
 #'   the Government of British Columbia and is available at:
 #'   https://www2.gov.bc.ca/gov/content/industry/forestry/managing-our-forest-resources/forest-inventory/field-forms-and-software/software-download#SiteTools
 #' @keywords internal
-#' @seealso See `vignette("legacy-interfaces")` for a complete reference of legacy
-#'   function mappings and migration guidance.
+#' @seealso
+#'   See `vignette("workflow-integration", package = "BCsindexRCFS")` for
+#'   practical PSP and treelist workflow examples.
+#'
+#'   See `vignette("legacy-interfaces", package = "BCsindexRCFS")` for a complete
+#'   reference of legacy function mappings and migration guidance.
 "_PACKAGE"
 
 # Track one-time legacy interface warnings for the current R session.

@@ -22,7 +22,7 @@
 #'
 #' @note
 #'    Species name string examples: "Coastal Douglas-fir", "Sitka Spruce".
-#' @rdname SIndexR_SpecName
+#' @noRd
 SIndexR_SpecName <- function(sp_index){
   sp_index <- wholeToInteger(sp_index, "sp_index")
   return(unlist(lapply(sp_index, function(s) Sindex_SpecName(s))))

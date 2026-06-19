@@ -11,6 +11,7 @@ typedef short (__cdecl *Fn_HtAgeToSI)(short, double, short, double, short, doubl
 typedef short (__cdecl *Fn_AgeSIToHt)(short, double, short, double, double, double*);
 typedef short (__cdecl *Fn_Y2BH)(short, double, double*);
 typedef short (__cdecl *Fn_SCToSI)(short, char, char, double*);
+typedef short (__cdecl *Fn_VersionNumber)();
 
 static HMODULE g_sindex_dll = nullptr;
 static std::string g_sindex_path;
@@ -18,12 +19,14 @@ static Fn_HtAgeToSI g_ht2si = nullptr;
 static Fn_AgeSIToHt g_si2ht = nullptr;
 static Fn_Y2BH g_y2bh = nullptr;
 static Fn_SCToSI g_sc2si = nullptr;
+static Fn_VersionNumber g_version_number = nullptr;
 
 static void clear_external_state() {
   g_ht2si = nullptr;
   g_si2ht = nullptr;
   g_y2bh = nullptr;
   g_sc2si = nullptr;
+  g_version_number = nullptr;
   g_sindex_path.clear();
   if (g_sindex_dll) {
     FreeLibrary(g_sindex_dll);
@@ -58,6 +61,9 @@ bool sindex_ext_set_dll(std::string dll_path) {
   g_si2ht = reinterpret_cast<Fn_AgeSIToHt>(p_si2ht);
   g_y2bh = reinterpret_cast<Fn_Y2BH>(p_y2bh);
   g_sc2si = reinterpret_cast<Fn_SCToSI>(p_sc2si);
+
+  FARPROC p_version = GetProcAddress(h, "Sindex_VersionNumber");
+  g_version_number = reinterpret_cast<Fn_VersionNumber>(p_version);
 
   return true;
 #else
@@ -167,5 +173,17 @@ double sindex_ext_sc2si(int species_index, std::string site_class, std::string f
 #else
   (void)species_index; (void)site_class; (void)fiz;
   return NA_REAL;
+#endif
+}
+
+// [[Rcpp::export]]
+int sindex_ext_version_number() {
+#ifdef _WIN32
+  if (!g_version_number) {
+    return -1;
+  }
+  return (int)g_version_number();
+#else
+  return -1;
 #endif
 }

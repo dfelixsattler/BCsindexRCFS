@@ -2,7 +2,7 @@
 % Please edit documentation in R/wrappers.R
 \name{si_ht_to_age}
 \alias{si_ht_to_age}
-\title{Calculate age given site index and height}
+\title{Calculate age given height and site index}
 \usage{
 si_ht_to_age(
   cu_index = NULL,
@@ -36,8 +36,9 @@ si_ht_to_age(
 numeric age
 }
 \description{
-Wrapper around `index_to_age`. If `y2bh` is not provided it will be
-estimated via `si_y2bh`.
+Converts a height and site index to an age for a particular site index
+curve. Age can be returned as total age or breast height age.
+If \code{y2bh} is not provided it will be estimated via \code{si_y2bh}.
 }
 \examples{
 si_ht_to_age(1, 30, 1, 30)

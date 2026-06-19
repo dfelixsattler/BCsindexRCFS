@@ -1,20 +1,40 @@
-library(SIndexRCFS)
+library(BCsindexRCFS)
 
 # Example: Permanent Sample Plot (PSP) workflow.
 # Goal: estimate site index and years-to-breast-height from observed dominant age/height.
-psp_path <- system.file("examples", "psp_sample.csv", package = "SIndexRCFS")
+psp_path <- system.file("examples", "psp_sample.csv", package = "BCsindexRCFS")
 psp <- read.csv(psp_path, stringsAsFactors = FALSE)
 
-psp$site_index_m <- mapply(
-  function(sp, age, age_type, h, est_type) {
-    ht_age_to_si(age = age, age_type = age_type, height = h, si_est_type = est_type, species = sp)
+psp$cu_index <- mapply(
+  function(sp) {
+    df <- curve_options(sp)
+    df$curve_index[df$is_default]
   },
-  psp$species, psp$bh_age, psp$age_type, psp$dom_height_m, psp$si_est_type
+  psp$species
+)
+
+psp$curve_name <- vapply(
+  psp$cu_index,
+  function(cu) SIndexR_CurveName(as.integer(cu)),
+  character(1)
+)
+
+psp$curve_source <- vapply(
+  psp$cu_index,
+  function(cu) curve_source(cu_index = cu),
+  character(1)
+)
+
+psp$site_index_m <- mapply(
+  function(cu, age, age_type, h, est_type) {
+    ht_age_to_si(cu_index = cu, age = age, age_type = age_type, height = h, si_est_type = est_type)
+  },
+  psp$cu_index, psp$bh_age, psp$age_type, psp$dom_height_m, psp$si_est_type
 )
 
 psp$y2bh_years <- mapply(
-  function(sp, si) si_to_y2bh(site_index = si, species = sp),
-  psp$species, psp$site_index_m
+  function(cu, si) si_to_y2bh(cu_index = cu, site_index = si),
+  psp$cu_index, psp$site_index_m
 )
 
 cat("PSP-level estimates:\n")

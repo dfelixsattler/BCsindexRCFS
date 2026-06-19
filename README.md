@@ -1,11 +1,11 @@
-# SIndexRCFS
+# BCsindexRCFS
 
-SIndexRCFS is a modernized fork of the original SIndexR package for running
+BCsindexRCFS is a modernized fork of the original SIndexR package for running
 Site index calculations in R, with a focus on practical forestry workflows.
 
 ## Project goals
 
-SIndexRCFS keeps compatibility with legacy SIndexR interfaces while adding a
+BCsindexRCFS keeps compatibility with legacy SIndexR interfaces while adding a
 cleaner modern wrapper layer that is easier to use in applied analysis and
 data pipelines.
 
@@ -30,7 +30,7 @@ data pipelines.
 
 ### From local tarball (recommended for testing)
 
-The built source package is available at: `C:\SIndexR_build\SIndexRCFS_0.2.0.tar.gz`
+The built source package is available at: `C:\SIndexR_build\BCsindexRCFS_0.2.0.tar.gz`
 
 In RStudio:
 1. **Tools** → **Install Packages**
@@ -39,7 +39,7 @@ In RStudio:
 
 Or via command line:
 ```r
-install.packages("C:/SIndexR_build/SIndexRCFS_0.2.0.tar.gz", repos=NULL, type="source")
+install.packages("C:/SIndexR_build/BCsindexRCFS_0.2.0.tar.gz", repos=NULL, type="source")
 ```
 
 ### From local source checkout:
@@ -53,7 +53,7 @@ remotes::install_local(".", build_vignettes = TRUE)
 
 ```r
 if (!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
-remotes::install_github("<owner>/SIndexRCFS", build_vignettes = TRUE)
+remotes::install_github("<owner>/BCsindexRCFS", build_vignettes = TRUE)
 ```
 
 ### Dependency management
@@ -66,18 +66,18 @@ R automatically installs all declared dependencies from DESCRIPTION:
 
 - `C:\SIndexR` — Main development repository (current)
 - `C:\SIndexR_build` — Built package artifacts (tarballs)
-- `C:\SIndexRCFS_old` — Archived early test package (deprecated)
+- `C:\BCsindexRCFS_old` — Archived early test package (deprecated)
 
 ## Quick start
 
 ```r
-library(SIndexRCFS)
+library(BCsindexRCFS)
 
 # Height -> Site index
 ht_age_to_si(age = 50, age_type = 1, height = 30, species = "SW")
 
 # Site index -> Height
-si_to_ht(iage = 50, age_type = 1, site_index = 30, species = "SW")
+si_to_ht(age = 50, age_type = 1, site_index = 30, species = "SW")
 
 # Site index -> Age
 si_ht_to_age(site_height = 30, age_type = 1, site_index = 30, species = "SW")
@@ -85,19 +85,32 @@ si_ht_to_age(site_height = 30, age_type = 1, site_index = 30, species = "SW")
 
 ## Workflow examples
 
-Run the packaged scripts:
+The best way to explore real forestry workflows is via the built-in vignettes.
+
+**In RStudio:** go to the **Packages** pane → click **BCsindexRCFS** → click **User guides, package vignettes and other documentation**.
+
+Or run:
 
 ```r
-source(system.file("examples", "psp_workflow_example.R", package = "SIndexRCFS"))
-source(system.file("examples", "treelist_workflow_example.R", package = "SIndexRCFS"))
+browseVignettes("BCsindexRCFS")
 ```
 
-Open the vignettes:
+Two workflow vignettes are available:
+
+| Vignette | Description |
+|---|---|
+| `workflow-integration` | PSP productivity estimation and treelist preparation for growth-and-yield models |
+| `legacy-interfaces` | Migration guide from old SIndexR function names |
+
+Open one directly:
 
 ```r
-vignette("workflow-integration", package = "SIndexRCFS")
-vignette("legacy-interfaces", package = "SIndexRCFS")
+vignette("workflow-integration", package = "BCsindexRCFS")
+vignette("legacy-interfaces", package = "BCsindexRCFS")
 ```
+
+> **Note:** vignettes are only available when the package is installed with
+> `build_vignettes = TRUE` (see Installation above).
 
 ## Support and contribution
 
