@@ -191,3 +191,20 @@ sindex_index_to_age <- function(cu_index, site_height, age_type, site_index, y2b
   }
   as.numeric(opt$minimum)
 }
+
+#' SIndex library version number
+#'
+#' Returns the version number of the Sindex routines in use. When an external
+#' DLL is loaded via \code{set_external_dll()}, the external DLL version is
+#' returned; otherwise the built-in compiled version is returned.
+#'
+#' The version is an integer in the form \code{Mmm} where \code{M} is the major
+#' release and \code{mm} is the minor release (e.g. \code{631} = version 6.31).
+#'
+#' @return integer version number
+#' @examples
+#' sindex_version()
+#' @export
+sindex_version <- function() {
+  sindex_version_number()
+}

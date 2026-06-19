@@ -1,2 +1,2 @@
 library(testthat)
-test_check("SIndexR")
+test_check("BCsindexRCFS")
