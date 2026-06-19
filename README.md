@@ -112,6 +112,21 @@ vignette("legacy-interfaces", package = "BCsindexRCFS")
 > **Note:** vignettes are only available when the package is installed with
 > `build_vignettes = TRUE` (see Installation above).
 
+## External Sindex DLL
+
+The package works standalone using its built-in C++ implementation. Optionally,
+you can load the official Sindex DLL from the BC Government for bit-identical
+results with SiteTools:
+
+**Download:** [Sindex DLL v154 (BC Government)](https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/forestry/stewardship/forest-analysis-inventory/software/sindex_dll_v154.zip)
+
+```r
+library(BCsindexRCFS)
+set_external_dll("C:/path/to/sindex64.dll")
+si_age_to_ht(species = "FDC", age = 50, site_index = 28)
+clear_external_dll()
+```
+
 ## Support and contribution
 
 Please file issues and contributions in this fork repository. See
