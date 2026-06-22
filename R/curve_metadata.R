@@ -102,12 +102,21 @@ DefaultCurve <- function(species, fiz = NULL) {
 #' Curve notes
 #'
 #' Returns notes describing usage constraints or guidance for a site index curve.
-#' You can provide a curve index directly, or provide a species and let SIndexR
-#' resolve the curve using the `curve` selector.
 #'
-#' @param cu_index integer/numeric curve index. Optional when `species` is provided.
-#' @param species integer/numeric species index or species code (e.g. "SW", "FDI")
-#' @param curve curve selector when `species` is provided: "default", "first", or numeric curve index
+#' Use one of two mutually exclusive modes:
+#' \itemize{
+#'   \item \strong{Direct}: supply \code{cu_index} only. \code{species}, \code{curve},
+#'     and \code{fiz} are ignored.
+#'   \item \strong{Species lookup}: supply \code{species} (and optionally \code{curve}
+#'     and \code{fiz}). \code{curve} selects which curve for that species to use.
+#' }
+#'
+#' @param cu_index integer curve index. When provided, all other arguments are ignored.
+#' @param species integer or character species index/code (e.g. "SW", "FDI"). Used only
+#'   when \code{cu_index} is \code{NULL}.
+#' @param curve curve selector, used only when \code{species} is provided:
+#'   \code{"default"} (default), \code{"first"}, or a numeric curve index.
+#'   A numeric value here also validates that the curve belongs to the given species.
 #' @param fiz optional FIZ code used when remapping species codes
 #' @return character vector of curve notes
 #' @examples
@@ -127,14 +136,22 @@ curve_notes <- function(cu_index = NULL, species = NULL, curve = "default", fiz 
 #' Curve source citation
 #'
 #' Returns the bibliographic reference (author, year, journal or report) for the
-#' research paper that a site index curve is based on. Use this to look up the
-#' original publication and its equations.
-#' You can provide a curve index directly, or provide a species and let SIndexR
-#' resolve the curve using the `curve` selector.
+#' research paper that a site index curve is based on.
 #'
-#' @param cu_index integer/numeric curve index. Optional when `species` is provided.
-#' @param species integer/numeric species index or species code (e.g. "SW", "FDI")
-#' @param curve curve selector when `species` is provided: "default", "first", or numeric curve index
+#' Use one of two mutually exclusive modes:
+#' \itemize{
+#'   \item \strong{Direct}: supply \code{cu_index} only. \code{species}, \code{curve},
+#'     and \code{fiz} are ignored.
+#'   \item \strong{Species lookup}: supply \code{species} (and optionally \code{curve}
+#'     and \code{fiz}). \code{curve} selects which curve for that species to use.
+#' }
+#'
+#' @param cu_index integer curve index. When provided, all other arguments are ignored.
+#' @param species integer or character species index/code (e.g. "SW", "FDI"). Used only
+#'   when \code{cu_index} is \code{NULL}.
+#' @param curve curve selector, used only when \code{species} is provided:
+#'   \code{"default"} (default), \code{"first"}, or a numeric curve index.
+#'   A numeric value here also validates that the curve belongs to the given species.
 #' @param fiz optional FIZ code used when remapping species codes
 #' @return character string containing the full bibliographic citation
 #' @examples
