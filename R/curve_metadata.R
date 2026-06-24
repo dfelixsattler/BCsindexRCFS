@@ -99,6 +99,41 @@ DefaultCurve <- function(species, fiz = NULL) {
   Sindex_DefCurve(sp_index)
 }
 
+#' Curve name
+#'
+#' Returns the short name of a site index curve (e.g. the author-year label used
+#' by SiteTools and the underlying Sindex library).
+#'
+#' Use one of two mutually exclusive modes:
+#' \itemize{
+#'   \item \strong{Direct}: supply \code{cu_index} only. \code{species}, \code{curve},
+#'     and \code{fiz} are ignored.
+#'   \item \strong{Species lookup}: supply \code{species} (and optionally \code{curve}
+#'     and \code{fiz}). \code{curve} selects which curve for that species to use.
+#' }
+#'
+#' @param cu_index integer curve index. When provided, all other arguments are ignored.
+#' @param species integer or character species index/code (e.g. "SW", "FDI"). Used only
+#'   when \code{cu_index} is \code{NULL}.
+#' @param curve curve selector, used only when \code{species} is provided:
+#'   \code{"default"} (default), \code{"first"}, or a numeric curve index.
+#'   A numeric value here also validates that the curve belongs to the given species.
+#' @param fiz optional FIZ code used when remapping species codes
+#' @return character vector of curve names
+#' @examples
+#' curve_name(cu_index = 112)
+#' curve_name(species = "SW")
+#' curve_name(species = "FDC", curve = "first")
+#' @export
+curve_name <- function(cu_index = NULL, species = NULL, curve = "default", fiz = NULL) {
+  if (!is.null(species)) {
+    cu_index <- resolve_curve_index(cu_index = cu_index, species = species, curve = curve, fiz = fiz)
+  }
+  if (is.null(cu_index)) stop("Provide either cu_index or species.")
+  cu_index <- wholeToInteger(cu_index, "cu_index")
+  unlist(lapply(cu_index, function(s) Sindex_CurveName(s)))
+}
+
 #' Curve notes
 #'
 #' Returns notes describing usage constraints or guidance for a site index curve.

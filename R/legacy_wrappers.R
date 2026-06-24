@@ -21,8 +21,8 @@ SIndexR_AgeToAge <- function(cu_index = NULL, age1, age1_type, age2_type, y2bh =
 #' @noRd
 #' @export
 SIndexR_CurveName <- function(cu_index) {
-  cu_index <- wholeToInteger(cu_index, "cu_index")
-  return(unlist(lapply(cu_index, function(s) Sindex_CurveName(s))))
+  sindex_warn_legacy_once("SIndexR_CurveName", "curve_name")
+  curve_name(cu_index = cu_index)
 }
 
 #' @noRd

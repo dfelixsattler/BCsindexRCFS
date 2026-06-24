@@ -15,36 +15,32 @@ validate_site_tools(
 }
 \arguments{
 \item{csv_files}{named character vector of CSV file paths. Names must be
-  SIndexR species codes (e.g. \code{c(FDC = "path/to/fd.csv", CWC = "path/to/cw.csv")}).
-  Any species exported from SiteTools can be included.}
+SIndexR species codes (e.g. `c(FDC = "path/to/fd.csv", CWC = "path/to/cw.csv")`).
+Any species exported from SiteTools can be included.}
 
 \item{output_dir}{directory where comparison CSV files are written. Defaults
-  to the directory of the first CSV file.}
+to the directory of the first CSV file.}
 
 \item{use_external_dll}{logical; if TRUE, route calculations through the
-  runtime external DLL backend configured via \code{set_external_dll()}}
+runtime external DLL backend configured via `set_external_dll()`}
 
 \item{external_dll_path}{optional path to the external DLL to load before
-  validating. If omitted and \code{use_external_dll} is TRUE, falls back to the
-  \code{SINDEX_EXTERNAL_DLL} environment variable or \code{C:/sindex64.dll}}
+validating. If omitted and `use_external_dll` is TRUE, falls back to the
+`SINDEX_EXTERNAL_DLL` environment variable or `C:/sindex64.dll`}
 
-\item{save_results}{logical; write one comparison CSV per species to \code{output_dir}}
+\item{save_results}{logical; write one comparison CSV per species to `output_dir`}
 
 \item{verbose}{logical; print per-species summaries to the console}
 }
 \value{
 a list with a named entry per species code (each containing
-\code{metadata}, \code{comparison}, and \code{summary}) plus a \code{files}
-entry with the written CSV paths
+  `metadata`, `comparison`, and `summary`) plus a `files` entry with the
+  written CSV paths
 }
 \description{
 Reads one or more SiteTools 4.4 CSV exports, compares the height table for
 each species against the corresponding SIndexR wrapper, and optionally writes
 comparison CSV files.
-}
-\details{
-Set \code{use_external_dll = TRUE} to route supported wrappers through the
-runtime DLL backend configured via \code{set_external_dll()}.
 }
 \examples{
 \dontrun{

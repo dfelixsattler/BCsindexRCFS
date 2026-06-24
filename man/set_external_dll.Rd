@@ -15,9 +15,6 @@ logical TRUE if loaded successfully
 \description{
 Loads an external `sindex*.dll` and enables core wrapper calls (`HT2SI`,
 `SI2HT`, `SIY2BH`, `SC2SI`) to use that DLL at runtime.
-
-The official Sindex DLL (v154) can be downloaded from the BC Government:
-\url{https://www2.gov.bc.ca/assets/gov/farming-natural-resources-and-industry/forestry/stewardship/forest-analysis-inventory/software/sindex_dll_v154.zip}
 }
 \examples{
 \dontrun{

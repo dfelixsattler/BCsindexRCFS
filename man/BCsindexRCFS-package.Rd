@@ -14,10 +14,10 @@ The SiteTools external DLL backend used by this package is published by
   https://www2.gov.bc.ca/gov/content/industry/forestry/managing-our-forest-resources/forest-inventory/field-forms-and-software/software-download#SiteTools
 }
 \seealso{
-See \code{vignette("workflow-integration", package = "BCsindexRCFS")} for
+See `vignette("workflow-integration", package = "BCsindexRCFS")` for
   practical PSP and treelist workflow examples.
 
-See \code{vignette("legacy-interfaces", package = "BCsindexRCFS")} for a complete
+  See `vignette("legacy-interfaces", package = "BCsindexRCFS")` for a complete
   reference of legacy function mappings and migration guidance.
 }
 \author{
