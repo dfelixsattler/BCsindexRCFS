@@ -94,8 +94,7 @@ for both regions.
 
 All conversion functions ultimately work with an integer species index.
 `species_to_sp_index()` is the FIZ-aware resolver; it is called internally
-by every other function but is exposed for cases where you need the raw index
-— for example, when iterating over the C-level curve list.
+by every other function but is exposed when you need the raw index directly.
 
 ```{r sp-index}
 species_to_sp_index(unique_sp, fiz = "H")
@@ -272,6 +271,44 @@ stand-level growth modelling.
 si_summary <- aggregate(si ~ sp_code, data = trees, FUN = mean)
 si_summary
 ```
+
+### PSP vs non-PSP aggregation
+
+The approach above — compute SI per tree, then average — matches the
+**non-PSP** pattern used in BC government compilers (e.g., FAIBCompiler's
+`siteAgeSummary()`).
+
+**PSP data follows a different order.** In PSP programs, heights and ages
+are averaged across suitable site trees first, and then SI is computed once
+from those averaged values:
+
+```{r si-summary-psp, eval=FALSE}
+# PSP pattern: average height and age first, then compute SI once
+psp_by_sp <- aggregate(cbind(height_m, bh_age) ~ sp_code, data = trees, FUN = mean)
+psp_by_sp$si <- mapply(
+  function(sp, age, ht, si_cu, gi_cu) {
+    cu <- if (age <= 50L) gi_cu else si_cu
+    ht_age_to_si(cu_index = cu, age = age, age_type = 1L, height = ht)
+  },
+  psp_by_sp$sp_code,
+  psp_by_sp$bh_age,
+  psp_by_sp$height_m,
+  sp_curves$si_curve[match(psp_by_sp$sp_code, sp_curves$sp_code)],
+  sp_curves$gi_curve[match(psp_by_sp$sp_code, sp_curves$sp_code)]
+)
+psp_by_sp
+```
+
+These two approaches produce different SI values because
+`mean(SI(h_i, a_i))` ≠ `SI(mean(h_i), mean(a_i))`. Use the pattern
+that matches how your source data was collected and how the downstream
+compiler expects SI to be supplied.
+
+Note also that PSP compilers (e.g., FAIBCompiler's `siteAgeSummary_PSP()`)
+apply a looser GI validity threshold: both GI and standard SI curves are
+computed, GI is preferred when `SI_GI > 0 & AGE_BH > 10`, with standard SI
+as fallback. The `age ≤ 50` rule shown earlier in this vignette reflects the
+non-PSP path.
 
 ---
 

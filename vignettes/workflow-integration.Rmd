@@ -55,7 +55,7 @@ psp$cu_index <- mapply(
 
 psp$curve_name <- vapply(
   psp$cu_index,
-  function(cu) SIndexR_CurveName(as.integer(cu)),
+  function(cu) curve_name(cu_index = cu),
   character(1)
 )
 
