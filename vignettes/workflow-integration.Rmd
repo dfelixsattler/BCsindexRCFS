@@ -27,6 +27,15 @@ The examples use generic sample datasets included in the package under `inst/exa
 Typical PSP programs maintain dominant height and age observations by plot and measurement year.
 Using those fields, BCsindexRCFS can derive site index and years to breast height.
 
+> **Site tree assumption.** The `dom_height_m` and `bh_age` fields in this example represent
+> measurements taken from pre-designated **site trees** — vigorous dominant or co-dominant trees
+> selected in the field according to BC's site tree criteria (see `?BCsindexRCFS` for the full
+> definition). This package does **not** select site trees from a general treelist. It assumes
+> that suitable trees have already been identified and that the supplied height and age values
+> reflect those trees. Passing height or age values from non-site trees (e.g., suppressed,
+> damaged, or open-grown trees) will produce site index estimates that are not ecologically
+> meaningful.
+
 ```{r psp-load}
 psp_path <- system.file("examples", "psp_sample.csv", package = "BCsindexRCFS")
 psp <- read.csv(psp_path, stringsAsFactors = FALSE)
@@ -90,6 +99,14 @@ aggregate(
 
 A common workflow is to estimate stand-level productivity from dominant age/height,
 then attach those attributes to each tree record used by a growth model.
+
+> **Site tree assumption.** The `dom_height_m` and `dom_bh_age` fields in `stand_inputs_sample.csv`
+> represent stand-level dominant height and age derived from suitable site trees. When working from
+> a full treelist rather than pre-compiled stand summaries, dominant height must be derived
+> externally before calling `ht_age_to_si()` — for example, by selecting the tallest live
+> dominant or co-dominant trees (crown class D or C) that are undamaged, have intact tops, and
+> are free from suppression or other influences on height-growth potential. See `?BCsindexRCFS`
+> for BC's full site tree definition.
 
 ```{r treelist-load}
 stands_path <- system.file("examples", "stand_inputs_sample.csv", package = "BCsindexRCFS")

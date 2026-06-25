@@ -43,6 +43,17 @@ numeric site index
 \description{
 A thin wrapper around the internal `height_to_index` routine.
 }
+\section{Site Trees}{
+
+  The `height` and `age` arguments must be measured from a \strong{suitable
+  site tree} --- a vigorous dominant or co-dominant tree with a full crown
+  and a straight, disease-free, undamaged stem. Wolf, open-grown, and
+  veteran trees are not suitable, nor are trees affected by suppression,
+  damage, fertilization, or other influences on inherent height-growth
+  potential. See \code{\link{BCsindexRCFS-package}} for the full BC
+  definition and reference.
+}
+
 \examples{
 ht_age_to_si(1, 50, 1, 30, 0)
 ht_age_to_si(age = 50, height = 30, species = "SW")

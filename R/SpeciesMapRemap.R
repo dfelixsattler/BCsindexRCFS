@@ -76,36 +76,6 @@ SIndexR_SpeciesIndex <- function(species, fiz = NULL)
   stop("species must be an integer index or a species code character string.")
 }
 
-
-#' Resolve species index using FIZ-aware remapping
-#'
-#' Converts species code(s) to the recommended integer species index using the
-#' Forest Inventory Zone (FIZ) to disambiguate codes that map to different species
-#' depending on coast vs interior (e.g. `"FD"` → `FDC` on coast, `FDI` in interior).
-#'
-#' @param species character species code(s) (e.g. `"FD"`, `"Sw"`)
-#' @param fiz character FIZ code(s): `A`–`C` for coast, `D`–`L` for interior.
-#'   Recycled to the length of `species` if length 1.
-#' @return integer vector of remapped species indices
-#' @examples
-#' species_to_sp_index("FD", "A")   # coastal Douglas-fir
-#' species_to_sp_index("FD", "D")   # interior Douglas-fir
-#' species_to_sp_index(c("Sw", "Pl"), "H")
-#' @export
-species_to_sp_index <- function(species, fiz) {
-  if (length(species) == 1 && length(fiz) != 1) {
-    species <- rep(species, length(fiz))
-  }
-  if (length(species) != 1 && length(fiz) == 1) {
-    fiz <- rep(fiz, length(species))
-  }
-  if (length(species) != length(fiz)) {
-    stop("species and fiz must have the same length, or one must be length 1.")
-  }
-  inputs <- Map(list, species, fiz)
-  unlist(lapply(inputs, function(x) species_remap(sc = x[[1]], fiz = x[[2]])))
-}
-
 #' @noRd
 SIndexR_SpecRemap <- function(sc, fiz) {
   species_to_sp_index(species = sc, fiz = fiz)

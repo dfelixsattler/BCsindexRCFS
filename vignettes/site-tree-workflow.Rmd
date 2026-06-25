@@ -1,0 +1,362 @@
+---
+title: "Site Tree Workflow: Full API Walkthrough"
+author: "BCsindexRCFS Contributors"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Site Tree Workflow: Full API Walkthrough}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = "#>")
+library(BCsindexRCFS)
+```
+
+## Overview
+
+This vignette walks through a complete site productivity estimation from raw
+field data to downstream growth model inputs, exercising every public function
+in the package. The five phases follow the function map in the package README.
+
+**Scenario:** Six site trees from two mixed-species stands — interior
+Douglas-fir (entered as `"FD"`) and interior spruce (entered as `"Sw"`).
+Ages were measured at different reference points: some trees were bored at
+the stump (total age), others at breast height (BH age).
+
+> **Site tree requirement.** Height and age must come from a *suitable site
+> tree* — a vigorous dominant or co-dominant tree with a full, undamaged crown
+> and a straight stem free of disease, suppression, or open-grown influence.
+> See `?BCsindexRCFS` for the full BC definition. This package does not select
+> site trees from a general treelist.
+
+---
+
+## Input data
+
+```{r data}
+trees <- data.frame(
+  tree_id     = 1:6,
+  species_raw = c("FD",    "FD",  "FD",    "Sw",  "Sw",    "Sw"),
+  height_m    = c(22.1,    19.8,  24.3,    18.5,  20.2,    17.9),
+  age         = c(52L,     48L,   55L,     45L,   50L,     42L),
+  age_source  = c("stump", "BH",  "stump", "BH",  "stump", "BH"),
+  fiz         = "H",
+  stringsAsFactors = FALSE
+)
+trees
+```
+
+`fiz = "H"` (Prince George Forest District) places all trees in the interior.
+This matters in the next step: the code `"FD"` is ambiguous between coastal
+and interior Douglas-fir, and the FIZ resolves it.
+
+---
+
+## ① Species Resolution
+
+### Canonical species codes
+
+`species_code()` normalizes any input — any capitalization, with or without
+the coast/interior suffix — to the canonical form used internally by SiteTools.
+
+```{r sp-code}
+trees$sp_code <- species_code(trees$species_raw, fiz = trees$fiz)
+trees[, c("tree_id", "species_raw", "sp_code")]
+```
+
+`"FD"` in FIZ `"H"` resolves to `"Fdi"` (interior Douglas-fir). Without a
+FIZ, `"FD"` alone is ambiguous and `species_to_sp_index()` will throw an
+error, which is intentional — silently defaulting to one coast/interior form
+would be a source of hard-to-detect mistakes.
+
+### Full species names
+
+```{r sp-name}
+unique_sp <- unique(trees$sp_code)
+data.frame(
+  sp_code = unique_sp,
+  sp_name = species_name(unique_sp)
+)
+```
+
+### Geographic occurrence
+
+```{r sp-location}
+species_location(unique_sp)
+```
+
+The `coast`, `interior`, and `common` columns are decoded from the SiteTools
+bit-field. A species flagged for both coast and interior has curves registered
+for both regions.
+
+### Integer species index
+
+All conversion functions ultimately work with an integer species index.
+`species_to_sp_index()` is the FIZ-aware resolver; it is called internally
+by every other function but is exposed for cases where you need the raw index
+— for example, when iterating over the C-level curve list.
+
+```{r sp-index}
+species_to_sp_index(unique_sp, fiz = "H")
+```
+
+---
+
+## ② Curve Inspection (optional)
+
+Each species has one or more registered SI curves. `curve_options()` returns
+a data frame listing every curve together with its index and a flag marking
+the package default.
+
+```{r curve-options}
+curve_options("Fdi")
+curve_options("Sw")
+```
+
+For most workflows the default curve is appropriate. When you need to
+select a specific curve — for example, to match results from another tool
+or to use a growth-intercept curve — inspect the full curve metadata first.
+
+```{r curve-meta}
+fdi_opts   <- curve_options("Fdi")
+fdi_default_cu <- fdi_opts$curve_index[fdi_opts$is_default]
+
+data.frame(
+  curve_index = fdi_default_cu,
+  name        = curve_name(cu_index   = fdi_default_cu),
+  notes       = curve_notes(cu_index  = fdi_default_cu),
+  source      = curve_source(cu_index = fdi_default_cu)
+)
+```
+
+`curve_notes()` often contains important usage caveats (for example, age
+range restrictions). `curve_source()` gives the full bibliographic citation,
+which is useful for audit trails and reporting.
+
+For workflows where the default curve depends on establishment type:
+
+```{r curve-estab}
+# Default curve by establishment type
+default_curve_estab("Fdi", estab = 1)
+default_curve_estab("Sw",  estab = 1)
+```
+
+`default_gi_curve()` returns the growth-intercept (GI) curve for each
+species. GI curves are calibrated for younger trees and should be used
+when breast-height age is **≤ 50 years**; for older trees the standard
+SI curve is more appropriate. This is the same rule applied in BC
+government compilers (e.g., FAIBCompiler).
+
+```{r curve-gi}
+default_gi_curve("Fdi")
+default_gi_curve("Sw")
+```
+
+---
+
+## ③ Age Preparation
+
+`ht_age_to_si()` requires **breast-height age** (`age_type = 1`). Trees bored
+at the stump have total age and must be converted first using `age_to_age()`.
+
+```{r age-prep}
+is_stump <- trees$age_source == "stump"
+
+# Start with each tree's measured age; overwrite for stump-bored trees
+trees$bh_age <- trees$age
+
+trees$bh_age[is_stump] <- mapply(
+  function(age, sp) {
+    age_to_age(
+      age1      = age,
+      age1_type = 0L,   # 0 = total age (stump bore)
+      age2_type = 1L,   # 1 = breast-height age
+      species   = sp
+    )
+  },
+  trees$age[is_stump],
+  trees$sp_code[is_stump]
+)
+
+trees[, c("tree_id", "sp_code", "age", "age_source", "bh_age")]
+```
+
+**How y2bh is handled:** `age_to_age()` needs years-to-breast-height (y2bh)
+to perform the conversion. When `y2bh` is not supplied it calls `si_to_y2bh()`
+internally using a default SI of 30 m. If you already have an SI estimate —
+for example from a prior measurement — you can supply `y2bh` explicitly for
+slightly greater accuracy:
+
+```{r age-prep-explicit-y2bh, eval=FALSE}
+# Supplying y2bh explicitly (more accurate when SI is already known)
+age_to_age(age1 = 52, age1_type = 0L, age2_type = 1L,
+           species = "Fdi", y2bh = si_to_y2bh(species = "Fdi", site_index = 23))
+```
+
+---
+
+## ④ Site Index Estimation
+
+The appropriate curve depends on tree age:
+
+- **BH age > 50**: use the default SI curve (reference age 50 BH)
+- **BH age ≤ 50**: use the growth-intercept (GI) curve, which is more
+  reliable for younger trees
+
+First resolve both curves for each species:
+
+```{r curve-resolve}
+sp_curves <- do.call(rbind, lapply(unique(trees$sp_code), function(sp) {
+  opts <- curve_options(sp)
+  data.frame(
+    sp_code  = sp,
+    si_curve = opts$curve_index[opts$is_default],
+    gi_curve = default_gi_curve(sp),
+    stringsAsFactors = FALSE
+  )
+}))
+
+# Attach to trees by lookup (avoids row reordering)
+trees$si_curve <- sp_curves$si_curve[match(trees$sp_code, sp_curves$sp_code)]
+trees$gi_curve <- sp_curves$gi_curve[match(trees$sp_code, sp_curves$sp_code)]
+sp_curves
+```
+
+Now compute SI using the age-appropriate curve:
+
+```{r si-calc}
+trees$si <- mapply(
+  function(age, ht, si_cu, gi_cu) {
+    cu <- if (age <= 50L) gi_cu else si_cu
+    ht_age_to_si(cu_index = cu, age = age, age_type = 1L, height = ht)
+  },
+  trees$bh_age,
+  trees$height_m,
+  trees$si_curve,
+  trees$gi_curve
+)
+
+# ht_age_to_si() returns the raw SIndex numeric result.
+# Negative values are SIndex error codes, not site index values.
+# Common causes: height at or below BH (<=1.3 m), age of 0,
+# or inputs outside the curve's valid range.
+n_err <- sum(trees$si < 0, na.rm = TRUE)
+if (n_err > 0) {
+  warning(n_err, " tree(s) returned SIndex error codes -- set to NA.")
+  trees$si[trees$si < 0] <- NA_real_
+}
+
+trees[, c("tree_id", "sp_code", "bh_age", "si_curve", "gi_curve", "height_m", "si")]
+```
+
+### Alternative: site class
+
+When stand age is under approximately 30 years, SI from height and age is
+unreliable. `site_class_to_index()` provides an alternative entry point using
+a categorical site quality rating (G = good, M = medium, P = poor, L = low):
+
+```{r site-class}
+site_class_to_index("Fdi", site_class = "G")
+site_class_to_index("Sw",  site_class = "M")
+```
+
+---
+
+## Summarize by Species
+
+Aggregate to a single SI estimate per species — the usual input for
+stand-level growth modelling.
+
+```{r si-summary}
+si_summary <- aggregate(si ~ sp_code, data = trees, FUN = mean)
+si_summary
+```
+
+---
+
+## ⑤ Downstream Uses
+
+### Project height at a future age
+
+`si_age_to_ht()` answers: *given this site index, how tall will dominant trees
+be at a target breast-height age?*
+
+```{r si-age-to-ht}
+si_summary$ht_at_bh100 <- mapply(
+  function(sp, si) si_age_to_ht(age = 100L, age_type = 1L, site_index = si, species = sp),
+  si_summary$sp_code,
+  si_summary$si
+)
+si_summary
+```
+
+### Estimate age at a target height
+
+`si_ht_to_age()` inverts the relationship — given SI and a target dominant
+height, it returns the expected breast-height age:
+
+```{r si-ht-to-age}
+data.frame(
+  sp_code        = si_summary$sp_code,
+  si             = round(si_summary$si, 1),
+  bh_age_at_30m  = mapply(
+    function(sp, si) si_ht_to_age(site_height = 30, age_type = 1L, site_index = si, species = sp),
+    si_summary$sp_code,
+    si_summary$si
+  )
+)
+```
+
+### Years to breast height
+
+`si_to_y2bh()` and `si_to_y2bh05()` return the expected number of years a
+seedling takes to reach breast height (1.3 m), given species and site index.
+This value is used internally by `age_to_age()` but is also needed explicitly
+when converting between total and BH ages in plantation records, or when
+building y2bh columns for growth model input tables.
+
+```{r y2bh}
+data.frame(
+  sp_code    = si_summary$sp_code,
+  si         = round(si_summary$si, 1),
+  y2bh       = mapply(si_to_y2bh,   species = si_summary$sp_code, site_index = si_summary$si),
+  y2bh_round = mapply(si_to_y2bh05, species = si_summary$sp_code, site_index = si_summary$si)
+)
+```
+
+`si_to_y2bh05()` rounds to the nearest 0.5-year step, which is the convention
+used by some growth models and SiteTools itself.
+
+### Convert SI between species
+
+`si_to_si()` translates a site index value from one species' curve to another
+using the SiteTools species-conversion table. SI values on different curves
+are not directly comparable — each curve was calibrated to data from that
+species only — so `si_to_si()` is needed before combining or comparing site
+index across species.
+
+```{r si-to-si}
+si_fdi <- si_summary$si[si_summary$sp_code == "Fdi"]
+si_sw  <- si_summary$si[si_summary$sp_code == "Sw"]
+
+data.frame(
+  conversion = c("Fdi  ->  Sw", "Sw   ->  Fdi"),
+  result_m   = c(
+    si_to_si("Fdi", si_fdi, "Sw"),
+    si_to_si("Sw",  si_sw,  "Fdi")
+  )
+)
+```
+
+---
+
+## Summary
+
+| Phase | Functions used |
+|---|---|
+| ① Species resolution | `species_code()`, `species_name()`, `species_location()`, `species_to_sp_index()` |
+| ② Curve inspection | `curve_options()`, `curve_name()`, `curve_notes()`, `curve_source()`, `default_curve_estab()`, `default_gi_curve()` |
+| ③ Age preparation | `age_to_age()`, `si_to_y2bh()` (internal) |
+| ④ SI estimation | `ht_age_to_si()`, `site_class_to_index()` |
+| ⑤ Downstream uses | `si_age_to_ht()`, `si_ht_to_age()`, `si_to_si()`, `si_to_y2bh()`, `si_to_y2bh05()` |
