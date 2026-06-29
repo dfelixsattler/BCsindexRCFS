@@ -11,7 +11,7 @@ bore_age_to_ages(
   species,
   fiz = NULL,
   si_est_type = 0L,
-  psp_cap = TRUE,
+  cap_y2bh = TRUE,
   curve = "default"
 )
 }
@@ -35,10 +35,15 @@ coastal). Passed to \code{\link{ht_age_to_si}} and
 \code{\link{ht_age_to_si}}: \code{0L} = direct (default),
 \code{1L} = iterative.}
 
-\item{psp_cap}{logical. When \code{TRUE} (the default), caps \code{y2bh}
+\item{cap_y2bh}{logical. When \code{TRUE} (the default), caps \code{y2bh}
 at \code{min(bore_age, 25)} after convergence if \code{y2bh} exceeds
-either value. This matches the PSP compilation rule used in the BC VRI
-Sample Data Compilation Process. Set to \code{FALSE} for non-PSP data.}
+either value. This prevents biologically implausible corrections that can
+arise when a low site index produces an inflated years-to-breast-height
+estimate---a problem that can occur in any data source regardless of
+compilation type. The cap originates from the BC PSP compilation
+specification but is recommended for general use. Set to \code{FALSE}
+only when you specifically want uncapped behaviour for sensitivity
+analysis or to match a non-standard pipeline.}
 
 \item{curve}{curve selector passed through to \code{\link{ht_age_to_si}}:
 \code{"default"} (the default), \code{"first"}, or a numeric curve index.}

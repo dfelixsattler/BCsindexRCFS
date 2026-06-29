@@ -1,5 +1,6 @@
 # Bore age conversion
 # Modern public API: bore_age_to_ages()
+# cap_y2bh replaces the legacy psp_cap name; the cap is recommended for all data.
 
 #' Convert bored age to breast height age and total age
 #'
@@ -34,10 +35,15 @@
 #' @param si_est_type integer, SI estimation type passed to
 #'   \code{\link{ht_age_to_si}}: \code{0L} = direct (default),
 #'   \code{1L} = iterative.
-#' @param psp_cap logical. When \code{TRUE} (the default), caps \code{y2bh}
+#' @param cap_y2bh logical. When \code{TRUE} (the default), caps \code{y2bh}
 #'   at \code{min(bore_age, 25)} after convergence if \code{y2bh} exceeds
-#'   either value. This matches the PSP compilation rule used in the BC VRI
-#'   Sample Data Compilation Process. Set to \code{FALSE} for non-PSP data.
+#'   either value. This prevents biologically implausible corrections that can
+#'   arise when a low site index produces an inflated years-to-breast-height
+#'   estimate---a problem that can occur in any data source regardless of
+#'   compilation type. The cap originates from the BC PSP compilation
+#'   specification but is recommended for general use. Set to \code{FALSE}
+#'   only when you specifically want uncapped behaviour for sensitivity
+#'   analysis or to match a non-standard pipeline.
 #' @param curve curve selector passed through to \code{\link{ht_age_to_si}}:
 #'   \code{"default"} (the default), \code{"first"}, or a numeric curve index.
 #'
@@ -76,7 +82,7 @@
 #' )
 #' @export
 bore_age_to_ages <- function(bore_age, bore_height, tree_height, species,
-                              fiz = NULL, si_est_type = 0L, psp_cap = TRUE,
+                              fiz = NULL, si_est_type = 0L, cap_y2bh = TRUE,
                               curve = "default") {
 
   n <- max(length(bore_age), length(bore_height),
@@ -146,8 +152,8 @@ bore_age_to_ages <- function(bore_age, bore_height, tree_height, species,
       if (iter >= 2 && round(first_bha) == round(second_bha)) break
     }
 
-    # --- PSP cap: applied after convergence ---
-    if (psp_cap && (y2bh_i > ba || y2bh_i > 25)) {
+    # --- y2bh cap: applied after convergence ---
+    if (cap_y2bh && (y2bh_i > ba || y2bh_i > 25)) {
       y2bh_i     <- min(ba, 25)
       second_bha <- ba - y2bh_i * (1.3 - bh) / 1.3
     }
